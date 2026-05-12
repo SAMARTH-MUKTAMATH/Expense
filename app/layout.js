@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 
 import { ClerkProvider } from "@clerk/nextjs";
@@ -8,8 +9,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Welth",
-  description: "One stop Finance Platform",
+  title: "Paisa — AI-powered finance, made for India",
+  description:
+    "Track every rupee, scan receipts with AI, set monthly budgets, and get personalised financial insights — all in one beautiful dashboard.",
 };
 
 export default function RootLayout({ children }) {
@@ -19,16 +21,11 @@ export default function RootLayout({ children }) {
         <head>
           <link rel="icon" href="/logo-sm.png" sizes="any" />
         </head>
-        <body className={`${inter.className}`}>
+        <body className={`${inter.className} antialiased`}>
           <Header />
-          <main className="min-h-screen">{children}</main>
-          <Toaster richColors />
-
-          <footer className="bg-blue-50 py-12">
-            <div className="container mx-auto px-4 text-center text-gray-600">
-              <p>Made with 💗 by <a href="https://github.com/SAMARTH-MUKTAMATH" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Samarth Muktamath</a></p>
-            </div>
-          </footer>
+          <main className="min-h-screen pt-16">{children}</main>
+          <Toaster richColors position="top-right" />
+          <Footer />
         </body>
       </html>
     </ClerkProvider>
