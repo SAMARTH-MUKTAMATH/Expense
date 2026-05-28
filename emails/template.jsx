@@ -68,13 +68,13 @@ export default function EmailTemplate({
     return (
       <Html>
         <Head />
-        <Preview>Your monthly Paisa report is here</Preview>
+        <Preview>Your monthly Vittam report is here</Preview>
         <Body style={styles.body}>
           <Container style={styles.container}>
             <Heading style={styles.title}>Your monthly report</Heading>
             <Text style={styles.text}>Hi {userName},</Text>
             <Text style={styles.text}>
-              Here&rsquo;s your Paisa summary for {data?.month}.
+              Here&rsquo;s your Vittam summary for {data?.month}.
             </Text>
 
             <Section style={styles.statsContainer}>
@@ -116,7 +116,7 @@ export default function EmailTemplate({
 
             {data?.insights && (
               <Section style={styles.section}>
-                <Heading style={styles.heading}>Paisa insights</Heading>
+                <Heading style={styles.heading}>Vittam insights</Heading>
                 {data.insights.map((insight, index) => (
                   <Text key={index} style={styles.insight}>
                     • {insight}
@@ -126,7 +126,7 @@ export default function EmailTemplate({
             )}
 
             <Text style={styles.footer}>
-              Thanks for using Paisa. Keep tracking — every rupee counts.
+              Thanks for using Vittam. Keep tracking — every rupee counts.
             </Text>
           </Container>
         </Body>
@@ -141,7 +141,7 @@ export default function EmailTemplate({
     return (
       <Html>
         <Head />
-        <Preview>Budget alert from Paisa</Preview>
+        <Preview>Budget alert from Vittam</Preview>
         <Body style={styles.body}>
           <Container style={styles.container}>
             <Heading style={styles.title}>Budget alert</Heading>
@@ -175,7 +175,7 @@ export default function EmailTemplate({
               </div>
             </Section>
             <Text style={styles.footer}>
-              Open your Paisa dashboard to see what&rsquo;s driving the spend.
+              Open your Vittam dashboard to see what&rsquo;s driving the spend.
             </Text>
           </Container>
         </Body>

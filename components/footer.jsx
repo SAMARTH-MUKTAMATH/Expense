@@ -13,8 +13,11 @@ const Footer = () => {
                             <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30">
                                 <span className="text-lg font-bold">₹</span>
                             </span>
-                            <span className="text-lg font-extrabold tracking-tight text-white">
-                                Paisa
+                            <span
+                                className="text-lg font-bold tracking-tight text-white"
+                                style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+                            >
+                                Vittam
                             </span>
                         </Link>
                         <p className="text-sm text-gray-400 max-w-xs">
@@ -111,7 +114,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-                    <p>© {new Date().getFullYear()} Paisa. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Vittam. All rights reserved.</p>
                     <p>
                         Made with 💗 by{" "}
                         <a
