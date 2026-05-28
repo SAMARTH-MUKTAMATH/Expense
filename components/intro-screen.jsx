@@ -3,31 +3,22 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
-const SESSION_KEY = "vittam-intro-played";
-const WORD = "Vittam";
-
-// TEMPORARILY DISABLED while debugging blank-page issue.
-// Restore by setting this flag to false.
-const DISABLED = true;
+const WORD_PREFIX = "Budget";
+const WORD_ACCENT = "FLOW";
 
 export default function IntroScreen() {
   const [show, setShow] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (DISABLED) return;
     setMounted(true);
     if (typeof window === "undefined") return;
-    const played = sessionStorage.getItem(SESSION_KEY);
-    if (played) return;
+    // Always play on refresh (no session gate).
     setShow(true);
-    sessionStorage.setItem(SESSION_KEY, "1");
-
-    const timer = setTimeout(() => setShow(false), 3200);
+    const timer = setTimeout(() => setShow(false), 5000);
     return () => clearTimeout(timer);
   }, []);
 
-  if (DISABLED) return null;
   if (!mounted) return null;
 
   return (
@@ -39,7 +30,7 @@ export default function IntroScreen() {
           exit={{ opacity: 0, y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+          style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
         >
           <BackgroundGlow />
           <Grid />
@@ -76,7 +67,7 @@ function Coin() {
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#b6f047] via-[#89E900] to-[#5fa800] shadow-[0_0_80px_0_rgba(137,233,0,0.6),0_20px_60px_-10px_rgba(0,0,0,0.6),inset_0_4px_20px_rgba(255,255,255,0.4),inset_0_-6px_20px_rgba(0,0,0,0.25)] flex items-center justify-center">
         <span
           className="text-6xl sm:text-7xl font-bold text-[#0a0a0a] [text-shadow:0_2px_0_rgba(255,255,255,0.3)] select-none"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+          style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
         >
           ₹
         </span>
@@ -94,33 +85,47 @@ function Coin() {
 }
 
 function Wordmark() {
+  const prefix = WORD_PREFIX.split("");
+  const accent = WORD_ACCENT.split("");
+
   return (
     <motion.div
-      className="absolute top-1/2 -translate-y-1/2 flex items-center gap-[0.02em]"
+      className="absolute top-1/2 -translate-y-1/2 flex items-baseline gap-[0.04em]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 1.55, duration: 0.1 }}
+      style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
     >
-      {WORD.split("").map((char, i) => (
+      {prefix.map((char, i) => (
         <motion.span
-          key={`${char}-${i}`}
-          className="inline-block text-6xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+          key={`p-${i}`}
+          className="inline-block text-8xl sm:text-9xl md:text-[10rem] tracking-tight text-white"
+          style={{ fontWeight: 700 }}
           initial={{ opacity: 0, y: 40, rotateX: -90, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
           transition={{
             delay: 1.6 + i * 0.06,
-            duration: 0.5,
+            duration: 0.6,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
-          {i === 0 ? (
-            <span className="bg-gradient-to-b from-[#b6f047] via-[#89E900] to-[#5fa800] bg-clip-text text-transparent">
-              {char}
-            </span>
-          ) : (
-            char
-          )}
+          {char}
+        </motion.span>
+      ))}
+      {accent.map((char, i) => (
+        <motion.span
+          key={`a-${i}`}
+          className="inline-block text-8xl sm:text-9xl md:text-[10rem] tracking-tight text-brand"
+          style={{ fontWeight: 400 }}
+          initial={{ opacity: 0, y: 40, rotateX: -90, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
+          transition={{
+            delay: 1.6 + (prefix.length + i) * 0.06,
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {char}
         </motion.span>
       ))}
     </motion.div>
@@ -131,7 +136,7 @@ function Tagline() {
   return (
     <motion.p
       className="absolute top-[calc(50%+5rem)] sm:top-[calc(50%+5.5rem)] text-xs sm:text-sm uppercase tracking-[0.4em] text-gray-400 whitespace-nowrap"
-      style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+      style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
       initial={{ opacity: 0, letterSpacing: "0.15em" }}
       animate={{ opacity: 1, letterSpacing: "0.4em" }}
       transition={{ delay: 2.1, duration: 0.6, ease: "easeOut" }}

@@ -218,7 +218,7 @@ const LandingPage = () => {
               </h2>
               <p className="text-[#0a0a0a]/75 mb-8 max-w-2xl mx-auto">
                 Join thousands of users in India who are already managing their
-                money smarter with Vittam. Free to start, no card required.
+                money smarter with BudgetFLOW. Free to start, no card required.
               </p>
               <Link href="/dashboard">
                 <Button

@@ -80,7 +80,7 @@ export const testimonialsData = [
     role: "Freelance designer, Bengaluru",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
     quote:
-      "Vittam replaced three different spreadsheets I was juggling. The receipt scanner alone saves me hours each month.",
+      "BudgetFLOW replaced three different spreadsheets I was juggling. The receipt scanner alone saves me hours each month.",
   },
   {
     name: "Priya Iyer",

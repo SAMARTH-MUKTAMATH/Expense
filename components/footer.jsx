@@ -15,9 +15,10 @@ const Footer = () => {
                             </span>
                             <span
                                 className="text-lg font-bold tracking-tight text-white"
-                                style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+                                style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
                             >
-                                Vittam
+                                <span className="font-extrabold">Budget</span>
+                                <span className="font-extrabold text-brand">FLOW</span>
                             </span>
                         </Link>
                         <p className="text-sm text-gray-400 max-w-xs">
@@ -114,7 +115,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-                    <p>© {new Date().getFullYear()} Vittam. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} BudgetFLOW. All rights reserved.</p>
                     <p>
                         Made with 💗 by{" "}
                         <a

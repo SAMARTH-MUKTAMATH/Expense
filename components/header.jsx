@@ -13,16 +13,17 @@ const Header = async () => {
     return (
         <header className="fixed top-0 w-full z-50">
             <div className="glass-dark border-b border-white/10">
-                <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
+                <nav
+                    className="container mx-auto px-4 py-3 flex items-center justify-between"
+                    style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
+                >
                     <Link href="/" className="flex items-center gap-2 group">
                         <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30 transition-transform group-hover:scale-105">
                             <span className="text-lg font-bold">₹</span>
                         </span>
-                        <span
-                            className="text-xl font-bold tracking-tight text-white"
-                            style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
-                        >
-                            Vittam
+                        <span className="text-xl font-bold tracking-tight text-white">
+                            <span className="font-extrabold">Budget</span>
+                            <span className="font-extrabold text-brand">FLOW</span>
                         </span>
                     </Link>
 
