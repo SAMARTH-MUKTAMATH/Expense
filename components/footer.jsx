@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GithubIcon } from "@/components/ui/github";
 import { LinkedinIcon } from "@/components/ui/linkedin";
 import { TwitterIcon } from "@/components/ui/twitter";
+import { HandCoinsIcon } from "@/components/ui/hand-coins";
 
 const Footer = () => {
     return (
@@ -10,8 +11,8 @@ const Footer = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div>
                         <Link href="/" className="flex items-center gap-2 mb-3">
-                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30">
-                                <span className="text-lg font-bold">₹</span>
+                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border-2 border-brand text-white bg-transparent">
+                                <HandCoinsIcon size={20} />
                             </span>
                             <span
                                 className="text-lg font-bold tracking-tight text-white"

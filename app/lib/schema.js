@@ -29,3 +29,23 @@ export const transactionSchema = z
       });
     }
   });
+
+export const groupMemberSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Enter a valid email"),
+});
+
+export const groupSchema = z.object({
+  name: z.string().min(1, "Group name is required"),
+  description: z.string().optional(),
+  members: z
+    .array(groupMemberSchema)
+    .min(1, "Add at least one member"),
+});
+
+export const expenseSchema = z.object({
+  description: z.string().min(1, "Description is required"),
+  amount: z.string().min(1, "Amount is required"),
+  paidByName: z.string().min(1, "Who paid?"),
+  splitWith: z.array(z.string()).optional(),
+});

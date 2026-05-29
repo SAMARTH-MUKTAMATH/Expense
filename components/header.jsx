@@ -4,8 +4,10 @@ import { SparklesIcon } from "@/components/ui/sparkles";
 import { SquarePenIcon } from "@/components/ui/square-pen";
 import { LayoutGridIcon } from "@/components/ui/layout-grid";
 import Link from "next/link";
+import { Users } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
+import { HandCoinsIcon } from "@/components/ui/hand-coins";
 
 const Header = async () => {
     await checkUser();
@@ -18,8 +20,8 @@ const Header = async () => {
                     style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
                 >
                     <Link href="/" className="flex items-center gap-2 group">
-                        <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30 transition-transform group-hover:scale-105">
-                            <span className="text-lg font-bold">₹</span>
+                        <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl border-2 border-brand text-white bg-transparent transition-all group-hover:scale-105 group-hover:bg-brand/10">
+                            <HandCoinsIcon size={20} />
                         </span>
                         <span className="text-xl font-bold tracking-tight text-white">
                             <span className="font-extrabold">Budget</span>
@@ -65,6 +67,15 @@ const Header = async () => {
                                 >
                                     <LayoutGridIcon size={18} />
                                     <span className="hidden sm:inline">Dashboard</span>
+                                </Button>
+                            </Link>
+                            <Link href="/groups">
+                                <Button
+                                    variant="outline"
+                                    className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
+                                >
+                                    <Users size={18} />
+                                    <span className="hidden sm:inline">Splitwise</span>
                                 </Button>
                             </Link>
                             <Link href="/transaction/create">
