@@ -18,12 +18,18 @@ const Header = async () => {
                         <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30 transition-transform group-hover:scale-105">
                             <span className="text-lg font-bold">₹</span>
                         </span>
-                        <span className="text-xl font-extrabold tracking-tight text-white">
-                            Paisa
+                        <span
+                            className="text-xl font-bold tracking-tight text-white"
+                            style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+                        >
+                            Vittam
                         </span>
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-7">
+                    <div
+                        className="hidden md:flex items-center gap-7"
+                        suppressHydrationWarning
+                    >
                         <SignedOut>
                             <a
                                 href="#features"
@@ -46,7 +52,10 @@ const Header = async () => {
                         </SignedOut>
                     </div>
 
-                    <div className="flex items-center gap-2 sm:gap-3">
+                    <div
+                        className="flex items-center gap-2 sm:gap-3"
+                        suppressHydrationWarning
+                    >
                         <SignedIn>
                             <Link href="/dashboard">
                                 <Button
@@ -81,13 +90,15 @@ const Header = async () => {
                             </SignInButton>
                         </SignedOut>
                         <SignedIn>
-                            <UserButton
-                                appearance={{
-                                    elements: {
-                                        avatarBox: "w-9 h-9 ring-2 ring-[#89E900]",
-                                    },
-                                }}
-                            />
+                            <span suppressHydrationWarning>
+                                <UserButton
+                                    appearance={{
+                                        elements: {
+                                            avatarBox: "w-9 h-9 ring-2 ring-[#89E900]",
+                                        },
+                                    }}
+                                />
+                            </span>
                         </SignedIn>
                     </div>
                 </nav>

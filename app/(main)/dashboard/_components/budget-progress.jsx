@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Edit2, Buliding } from "iconsax-react";
+import { Edit2 } from "iconsax-react";
+import { Target } from "lucide-react";
 import { CircleCheckIcon } from "@/components/ui/circle-check";
 import { XIcon } from "@/components/ui/x";
 import useFetch from "@/hooks/use-fetch";
@@ -69,16 +70,16 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
         : "bg-gradient-to-r from-emerald-500 to-teal-500";
 
   return (
-    <Card className="relative overflow-hidden bg-[#161616] border-white/10">
+    <Card className="relative overflow-hidden bg-ink-soft border-white/10">
       <div
         aria-hidden
-        className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-[#89E900]/15 blur-3xl"
+        className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-brand/15 blur-3xl"
       />
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="h-11 w-11 rounded-xl bg-[#89E900] text-[#0a0a0a] flex items-center justify-center shadow-md shadow-[#89E900]/30">
-              <Buliding className="h-5 w-5" />
+            <div className="h-11 w-11 rounded-xl bg-brand text-ink flex items-center justify-center shadow-md shadow-brand/30">
+              <Target className="h-5 w-5" strokeWidth={2.5} />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">
@@ -95,7 +96,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
                       type="number"
                       value={newBudget}
                       onChange={(e) => setNewBudget(e.target.value)}
-                      className="w-32 h-8 bg-[#0a0a0a] border-white/15 text-white"
+                      className="w-32 h-8 bg-ink border-white/15 text-white"
                       placeholder="Amount"
                       autoFocus
                       disabled={isLoading}
@@ -119,29 +120,33 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
                       <XIcon size={16} className="text-red-400" />
                     </Button>
                   </>
-                ) : (
+                ) : initialBudget ? (
                   <>
                     <p className="text-sm text-gray-300">
-                      {initialBudget ? (
-                        <>
-                          <span className="font-semibold text-white">
-                            {formatINR(currentExpenses)}
-                          </span>{" "}
-                          of {formatINR(initialBudget.amount)} spent
-                        </>
-                      ) : (
-                        "No budget set yet"
-                      )}
+                      <span className="font-semibold text-white">
+                        {formatINR(currentExpenses)}
+                      </span>{" "}
+                      of {formatINR(initialBudget.amount)} spent
                     </p>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => setIsEditing(true)}
-                      className="h-6 w-6 hover:bg-white/5"
+                      aria-label="Edit budget"
+                      className="h-7 w-7 hover:bg-white/5"
                     >
-                      <Edit2 className="h-3 w-3 text-gray-400" />
+                      <Edit2 className="h-4 w-4 text-brand" />
                     </Button>
                   </>
+                ) : (
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    size="sm"
+                    className="h-8 gap-1.5 btn-primary px-3"
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                    Set budget
+                  </Button>
                 )}
               </div>
             </div>
@@ -150,7 +155,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
           {initialBudget && (
             <div className="text-right">
               <p className="text-xs text-gray-400">Remaining</p>
-              <p className="text-2xl font-extrabold tracking-tight text-[#89E900]">
+              <p className="text-2xl font-extrabold tracking-tight text-brand">
                 {formatINR(remaining)}
               </p>
             </div>

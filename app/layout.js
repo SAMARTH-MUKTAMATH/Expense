@@ -1,15 +1,22 @@
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
+import IntroScreen from "@/components/intro-screen";
+import { Suspense } from "react";
 
 import { ClerkProvider } from "@clerk/nextjs";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+});
 
 export const metadata = {
-  title: "Paisa — AI-powered finance, made for India",
+  title: "Vittam — AI-powered finance, made for India",
   description:
     "Track every rupee, scan receipts with AI, set monthly budgets, and get personalised financial insights — all in one beautiful dashboard.",
 };
@@ -21,8 +28,13 @@ export default function RootLayout({ children }) {
         <head>
           <link rel="icon" href="/logo-sm.png" sizes="any" />
         </head>
-        <body className={`${inter.className} antialiased`}>
-          <Header />
+        <body
+          className={`${inter.variable} ${spaceGrotesk.variable} ${inter.className} antialiased`}
+        >
+          <IntroScreen />
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
           <main className="min-h-screen pt-16">{children}</main>
           <Toaster richColors position="top-right" />
           <Footer />
