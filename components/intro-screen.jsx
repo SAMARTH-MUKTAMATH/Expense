@@ -1,33 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-
-const SESSION_KEY = "vittam-intro-played";
-const WORD = "Vittam";
-
-// TEMPORARILY DISABLED while debugging blank-page issue.
-// Restore by setting this flag to false.
-const DISABLED = true;
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, LayoutGroup } from "motion/react";
+import { HandCoinsIcon } from "@/components/ui/hand-coins";
 
 export default function IntroScreen() {
   const [show, setShow] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showWordmark, setShowWordmark] = useState(false);
+  const iconRef = useRef(null);
 
   useEffect(() => {
-    if (DISABLED) return;
     setMounted(true);
     if (typeof window === "undefined") return;
-    const played = sessionStorage.getItem(SESSION_KEY);
-    if (played) return;
     setShow(true);
-    sessionStorage.setItem(SESSION_KEY, "1");
 
-    const timer = setTimeout(() => setShow(false), 3200);
-    return () => clearTimeout(timer);
+    // Replay the inner coin-drop animation while the icon is huge so the
+    // coins visibly land in the hand at the moment of impact.
+    const t1 = setTimeout(() => iconRef.current?.startAnimation?.(), 650);
+    const t2 = setTimeout(() => iconRef.current?.startAnimation?.(), 1300);
+
+    // Wait until the icon has FULLY shrunk before letting the wordmark in.
+    // Icon shrink completes at ~2.1s in the new timing curve below.
+    const tWord = setTimeout(() => setShowWordmark(true), 2300);
+
+    const tExit = setTimeout(() => setShow(false), 5800);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(tWord);
+      clearTimeout(tExit);
+    };
   }, []);
 
-  if (DISABLED) return null;
   if (!mounted) return null;
 
   return (
@@ -38,18 +43,68 @@ export default function IntroScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+          className="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-ink"
+          style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
         >
           <BackgroundGlow />
           <Grid />
 
-          <div className="relative flex flex-col items-center [perspective:1200px]">
-            <Coin />
-            <Wordmark />
-            <Tagline />
-          </div>
+          <LayoutGroup>
+            <motion.div
+              layout
+              transition={{
+                layout: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+              }}
+              className="relative flex items-center gap-4 sm:gap-6 md:gap-8"
+            >
+              {/* Hand-coins icon: drops in HUGE, plays its coin animation,
+                  then smoothly zooms out as the wordmark slides in next to it */}
+              <motion.div
+                layout
+                className="text-white relative"
+                initial={{ scale: 0, y: -280, opacity: 0 }}
+                animate={{
+                  scale: [0, 3.6, 3.6, 1.4, 1.4],
+                  y: [-280, 0, 0, 0, 0],
+                  opacity: [0, 1, 1, 1, 1],
+                }}
+                transition={{
+                  // Total 3.0s but the shrink happens earlier so the wordmark
+                  // has clean space when it slides in. Phases:
+                  //   0.0–0.6s  grow (0 → 3.6)
+                  //   0.6–1.4s  hold huge (coins drop in here)
+                  //   1.4–2.1s  shrink (3.6 → 1.4)
+                  //   2.1–3.0s  hold final size
+                  duration: 3.0,
+                  times: [0, 0.2, 0.47, 0.7, 1],
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              >
+                <HandCoinsIcon ref={iconRef} size={72} />
+              </motion.div>
 
+              {/* Wordmark slides in from the right of the icon */}
+              <AnimatePresence>
+                {showWordmark && (
+                  <motion.div
+                    layout
+                    key="wordmark"
+                    initial={{ opacity: 0, x: -40, filter: "blur(14px)" }}
+                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{
+                      duration: 0.9,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <Wordmark />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </LayoutGroup>
+
+          <Tagline />
           <BottomLoader />
         </motion.div>
       )}
@@ -57,84 +112,33 @@ export default function IntroScreen() {
   );
 }
 
-function Coin() {
-  return (
-    <motion.div
-      className="relative h-32 w-32 sm:h-40 sm:w-40 [transform-style:preserve-3d]"
-      initial={{ scale: 0, rotateY: 0, opacity: 0 }}
-      animate={{
-        scale: [0, 1.15, 1, 1, 1],
-        rotateY: [0, 360, 720, 900, 990],
-        opacity: [0, 1, 1, 1, 0],
-      }}
-      transition={{
-        duration: 1.8,
-        times: [0, 0.25, 0.55, 0.85, 1],
-        ease: "easeInOut",
-      }}
-    >
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#b6f047] via-[#89E900] to-[#5fa800] shadow-[0_0_80px_0_rgba(137,233,0,0.6),0_20px_60px_-10px_rgba(0,0,0,0.6),inset_0_4px_20px_rgba(255,255,255,0.4),inset_0_-6px_20px_rgba(0,0,0,0.25)] flex items-center justify-center">
-        <span
-          className="text-6xl sm:text-7xl font-bold text-[#0a0a0a] [text-shadow:0_2px_0_rgba(255,255,255,0.3)] select-none"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
-        >
-          ₹
-        </span>
-        <div
-          aria-hidden
-          className="absolute inset-1 rounded-full border-2 border-dashed border-[#0a0a0a]/15"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-white/0 to-white/30"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
 function Wordmark() {
   return (
-    <motion.div
-      className="absolute top-1/2 -translate-y-1/2 flex items-center gap-[0.02em]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.55, duration: 0.1 }}
-    >
-      {WORD.split("").map((char, i) => (
-        <motion.span
-          key={`${char}-${i}`}
-          className="inline-block text-6xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white"
-          style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
-          initial={{ opacity: 0, y: 40, rotateX: -90, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-          transition={{
-            delay: 1.6 + i * 0.06,
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          {i === 0 ? (
-            <span className="bg-gradient-to-b from-[#b6f047] via-[#89E900] to-[#5fa800] bg-clip-text text-transparent">
-              {char}
-            </span>
-          ) : (
-            char
-          )}
-        </motion.span>
-      ))}
-    </motion.div>
+    <div className="flex items-baseline gap-[0.04em] whitespace-nowrap">
+      <span
+        className="text-7xl sm:text-8xl md:text-9xl tracking-tight text-white"
+        style={{ fontWeight: 700 }}
+      >
+        Budget
+      </span>
+      <span
+        className="text-7xl sm:text-8xl md:text-9xl tracking-tight text-brand"
+        style={{ fontWeight: 400 }}
+      >
+        FLOW
+      </span>
+    </div>
   );
 }
 
 function Tagline() {
   return (
     <motion.p
-      className="absolute top-[calc(50%+5rem)] sm:top-[calc(50%+5.5rem)] text-xs sm:text-sm uppercase tracking-[0.4em] text-gray-400 whitespace-nowrap"
-      style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
+      className="absolute top-[calc(50%+5.5rem)] sm:top-[calc(50%+6rem)] text-xs sm:text-sm uppercase tracking-[0.4em] text-gray-400 whitespace-nowrap"
+      style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
       initial={{ opacity: 0, letterSpacing: "0.15em" }}
       animate={{ opacity: 1, letterSpacing: "0.4em" }}
-      transition={{ delay: 2.1, duration: 0.6, ease: "easeOut" }}
+      transition={{ delay: 3.3, duration: 0.8, ease: "easeOut" }}
     >
       Money · Made · Smart
     </motion.p>
@@ -146,14 +150,14 @@ function BackgroundGlow() {
     <>
       <motion.div
         aria-hidden
-        className="absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#89E900]/15 blur-3xl"
+        className="absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-3xl"
         initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: [0.4, 1.2, 1], opacity: [0, 0.9, 0.5] }}
         transition={{ duration: 2.4, times: [0, 0.4, 1], ease: "easeOut" }}
       />
       <motion.div
         aria-hidden
-        className="absolute left-1/4 top-1/3 h-72 w-72 rounded-full bg-[#89E900]/20 blur-3xl"
+        className="absolute left-1/4 top-1/3 h-72 w-72 rounded-full bg-brand/20 blur-3xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0.6, 0.3] }}
         transition={{ duration: 2.6, delay: 0.4 }}
@@ -180,7 +184,7 @@ function BottomLoader() {
       transition={{ delay: 0.3, duration: 0.4 }}
     >
       <motion.div
-        className="h-full bg-gradient-to-r from-transparent via-[#89E900] to-transparent"
+        className="h-full bg-gradient-to-r from-transparent via-brand to-transparent"
         initial={{ x: "-100%" }}
         animate={{ x: "100%" }}
         transition={{

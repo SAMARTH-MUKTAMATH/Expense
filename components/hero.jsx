@@ -82,7 +82,7 @@ const HeroSection = () => {
                     </h1>
 
                     <p className="text-base md:text-lg text-[#0a0a0a]/75 mb-10 max-w-2xl mx-auto animate-fade-up [animation-delay:120ms]">
-                        Vittam is your AI-powered finance companion. Scan receipts, track
+                        BudgetFLOW is your AI-powered finance companion. Scan receipts, track
                         spending in ₹, set budgets, and get personalised monthly
                         insights — all in one place.
                     </p>
@@ -213,7 +213,7 @@ function DashboardPreview() {
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
                     <div className="mx-auto flex items-center gap-1.5 rounded-md bg-[#0a0a0a] border border-white/10 px-2.5 py-1 text-[10px] text-gray-400">
                         <ShieldCheckIcon size={12} className="text-[#89E900]" />
-                        vittam.app/dashboard
+                        budgetflow.app/dashboard
                     </div>
                 </div>
 

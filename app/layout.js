@@ -1,4 +1,4 @@
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -14,9 +14,14 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["500", "600", "700"],
   variable: "--font-display",
 });
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-intro",
+});
 
 export const metadata = {
-  title: "Vittam — AI-powered finance, made for India",
+  title: "BudgetFLOW — AI-powered finance, made for India",
   description:
     "Track every rupee, scan receipts with AI, set monthly budgets, and get personalised financial insights — all in one beautiful dashboard.",
 };
@@ -29,7 +34,7 @@ export default function RootLayout({ children }) {
           <link rel="icon" href="/logo-sm.png" sizes="any" />
         </head>
         <body
-          className={`${inter.variable} ${spaceGrotesk.variable} ${inter.className} antialiased`}
+          className={`${inter.variable} ${spaceGrotesk.variable} ${outfit.variable} ${inter.className} antialiased`}
         >
           <IntroScreen />
           <Suspense fallback={null}>

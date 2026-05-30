@@ -4,8 +4,10 @@ import { SparklesIcon } from "@/components/ui/sparkles";
 import { SquarePenIcon } from "@/components/ui/square-pen";
 import { LayoutGridIcon } from "@/components/ui/layout-grid";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Users } from "lucide-react";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
+import { HandCoinsIcon } from "@/components/ui/hand-coins";
 
 const Header = async () => {
     await checkUser();
@@ -13,16 +15,17 @@ const Header = async () => {
     return (
         <header className="fixed top-0 w-full z-50">
             <div className="glass-dark border-b border-white/10">
-                <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
+                <nav
+                    className="container mx-auto px-4 py-3 flex items-center justify-between"
+                    style={{ fontFamily: "var(--font-intro), system-ui, sans-serif" }}
+                >
                     <Link href="/" className="flex items-center gap-2 group">
-                        <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/30 transition-transform group-hover:scale-105">
-                            <span className="text-lg font-bold">₹</span>
+                        <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl border-2 border-brand text-white bg-transparent transition-all group-hover:scale-105 group-hover:bg-brand/10">
+                            <HandCoinsIcon size={20} />
                         </span>
-                        <span
-                            className="text-xl font-bold tracking-tight text-white"
-                            style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
-                        >
-                            Vittam
+                        <span className="text-xl font-bold tracking-tight text-white">
+                            <span className="font-extrabold">Budget</span>
+                            <span className="font-extrabold text-brand">FLOW</span>
                         </span>
                     </Link>
 
@@ -30,7 +33,7 @@ const Header = async () => {
                         className="hidden md:flex items-center gap-7"
                         suppressHydrationWarning
                     >
-                        <SignedOut>
+                        <Show when="signed-out">
                             <a
                                 href="#features"
                                 className="text-sm text-gray-400 hover:text-[#89E900] transition-colors"
@@ -49,14 +52,14 @@ const Header = async () => {
                             >
                                 Testimonials
                             </a>
-                        </SignedOut>
+                        </Show>
                     </div>
 
                     <div
                         className="flex items-center gap-2 sm:gap-3"
                         suppressHydrationWarning
                     >
-                        <SignedIn>
+                        <Show when="signed-in">
                             <Link href="/dashboard">
                                 <Button
                                     variant="outline"
@@ -66,14 +69,23 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Dashboard</span>
                                 </Button>
                             </Link>
+                            <Link href="/groups">
+                                <Button
+                                    variant="outline"
+                                    className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
+                                >
+                                    <Users size={18} />
+                                    <span className="hidden sm:inline">Splitwise</span>
+                                </Button>
+                            </Link>
                             <Link href="/transaction/create">
                                 <Button className="group gap-2 btn-primary">
                                     <SquarePenIcon size={18} />
                                     <span className="hidden sm:inline">Add Transaction</span>
                                 </Button>
                             </Link>
-                        </SignedIn>
-                        <SignedOut>
+                        </Show>
+                        <Show when="signed-out">
                             <SignInButton forceRedirectUrl="/dashboard">
                                 <Button
                                     variant="ghost"
@@ -88,8 +100,8 @@ const Header = async () => {
                                     Get Started
                                 </Button>
                             </SignInButton>
-                        </SignedOut>
-                        <SignedIn>
+                        </Show>
+                        <Show when="signed-in">
                             <span suppressHydrationWarning>
                                 <UserButton
                                     appearance={{
@@ -99,7 +111,7 @@ const Header = async () => {
                                     }}
                                 />
                             </span>
-                        </SignedIn>
+                        </Show>
                     </div>
                 </nav>
             </div>
