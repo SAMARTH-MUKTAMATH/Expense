@@ -8,6 +8,9 @@ const nextConfig = {
       },
     ],
   },
+  // Keep heavy server-only packages out of the bundler — Turbopack tries to
+  // process @react-pdf/renderer's entire dep tree otherwise and OOMs on dev.
+  serverExternalPackages: ["@react-pdf/renderer"],
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",

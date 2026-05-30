@@ -78,6 +78,15 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Splitwise</span>
                                 </Button>
                             </Link>
+                            <Link href="/advisor">
+                                <Button
+                                    variant="outline"
+                                    className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
+                                >
+                                    <SparklesIcon size={18} />
+                                    <span className="hidden sm:inline">Financial Advice</span>
+                                </Button>
+                            </Link>
                             <Link href="/transaction/create">
                                 <Button className="group gap-2 btn-primary">
                                     <SquarePenIcon size={18} />

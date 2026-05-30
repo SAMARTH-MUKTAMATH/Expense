@@ -22,6 +22,7 @@ model User {
   accounts      Account[]
   budgets       Budget[]
   createdGroups Group[]   @relation("CreatedGroups")
+  financialReports FinancialReport[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -140,6 +141,22 @@ model ExpenseShare {
   @@index([expenseId])
   @@index([memberId])
   @@map("expense_shares")
+}
+
+model FinancialReport {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  monthKey        String    // "YYYY-MM" — the month the report covers
+  contentMarkdown String    @db.Text
+  healthScore     Int?
+  source          String    @default("cron")     // "cron" | "on-demand"
+  deliveryMode    String    @default("web")      // "web" | "email"
+  emailSentAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@map("financial_reports")
 }
 
 enum TransactionType {

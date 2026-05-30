@@ -304,3 +304,82 @@
 .animate-fade-up {
   animation: fade-up 0.6s ease-out both;
 }
+
+/* Advisor report markdown — dark-theme prose styling. */
+.advisor-prose {
+  color: #e5e5e5;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.advisor-prose h1,
+.advisor-prose h2,
+.advisor-prose h3,
+.advisor-prose h4 {
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+.advisor-prose h1 { font-size: 1.6em; }
+.advisor-prose h2 { font-size: 1.3em; }
+.advisor-prose h3 {
+  font-size: 1.05em;
+  color: #89E900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.advisor-prose h4 { font-size: 0.95em; }
+.advisor-prose p { margin: 0.6em 0; }
+.advisor-prose strong { color: #ffffff; font-weight: 700; }
+.advisor-prose em { color: #d4d4d4; }
+.advisor-prose hr {
+  border: 0;
+  border-top: 1px solid #2a2a2a;
+  margin: 2em 0;
+}
+.advisor-prose ul,
+.advisor-prose ol {
+  padding-left: 1.4em;
+  margin: 0.6em 0;
+}
+.advisor-prose ul li { list-style: disc; }
+.advisor-prose ol li { list-style: decimal; }
+.advisor-prose li { margin: 0.3em 0; }
+.advisor-prose li::marker { color: #89E900; }
+.advisor-prose code {
+  background: #1f1f1f;
+  color: #89E900;
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+.advisor-prose blockquote {
+  border-left: 3px solid #89E900;
+  padding-left: 0.9em;
+  color: #a3a3a3;
+  margin: 0.8em 0;
+}
+.advisor-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 0.9em;
+  display: block;
+  overflow-x: auto;
+}
+.advisor-prose thead {
+  background: #1a1a1a;
+}
+.advisor-prose th,
+.advisor-prose td {
+  border: 1px solid #2a2a2a;
+  padding: 8px 10px;
+  text-align: left;
+  color: #e5e5e5;
+}
+.advisor-prose th { color: #ffffff; font-weight: 700; }
+.advisor-prose a {
+  color: #89E900;
+  text-decoration: underline;
+}

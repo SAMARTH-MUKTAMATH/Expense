@@ -83,7 +83,43 @@ export default function EmailTemplate({
   if (type === "monthly-report") return <MonthlyReport userName={userName} data={data} />;
   if (type === "budget-alert") return <BudgetAlert userName={userName} data={data} />;
   if (type === "settle-reminder") return <SettleReminder userName={userName} data={data} />;
+  if (type === "advisor-ready") return <AdvisorReady userName={userName} data={data} />;
   return null;
+}
+
+function AdvisorReady({ userName, data }) {
+  const { reportId, monthKey, healthScore } = data || {};
+  return (
+    <Shell preview={`Your ${monthKey || ""} BudgetFLOW advisor report is ready`}>
+      <Hero
+        eyebrow="Financial advice"
+        title={`Your ${monthKey || "monthly"} report is ready`}
+        subtitle={`Hi ${userName || "there"} — your full financial intelligence report is attached as a PDF, and also available online.`}
+      />
+
+      {healthScore != null && (
+        <Section className="bf-card" style={styles.card}>
+          <Text style={styles.pctLabel}>Financial Health Score</Text>
+          <Text className="bf-pct" style={styles.pctNumber}>
+            {healthScore}<span style={{ fontSize: "20px", color: "#a3a3a3" }}> / 100</span>
+          </Text>
+        </Section>
+      )}
+
+      <Section className="bf-card" style={styles.card}>
+        <Text style={styles.cardTitle}>📎 PDF attached</Text>
+        <Text style={styles.insightText}>
+          Download the attachment from your inbox to read the full 18-section
+          intelligence report — financial health score, expense analysis,
+          forecasts, savings opportunities, and a 12-month action plan.
+        </Text>
+      </Section>
+
+      {reportId && <CTA href={`${APP_URL}/advisor/${reportId}`}>View online</CTA>}
+
+      <Footer note="Your monthly financial intelligence, delivered." />
+    </Shell>
+  );
 }
 
 function MonthlyReport({ userName, data }) {

@@ -6,6 +6,8 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/account(.*)",
   "/transaction(.*)",
+  "/advisor(.*)",
+  "/groups(.*)",
 ]);
 
 // Create Arcjet middleware
