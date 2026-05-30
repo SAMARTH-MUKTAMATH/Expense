@@ -3,6 +3,8 @@
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { checkUser } from "@/lib/checkUser";
+import { sendEmail } from "@/actions/send-email";
+import EmailTemplate from "@/emails/template";
 
 const serializeAmount = (obj) => ({
     ...obj,
@@ -290,6 +292,95 @@ export async function getNotifyPayload(shareId) {
             share: { id: share.id, amount: share.amount.toNumber() },
         },
     };
+}
+
+// ---------- NOTIFY BY EMAIL (Brevo) ----------
+const NOTIFY_THROTTLE_MS = 5 * 60 * 1000; // one email per share per 5 minutes
+
+export async function notifyMemberByEmail(shareId) {
+    const user = await checkUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const share = await db.expenseShare.findUnique({
+        where: { id: shareId },
+        include: {
+            member: true,
+            expense: { include: { group: true } },
+        },
+    });
+
+    if (!share || share.expense.group.createdById !== user.id) {
+        throw new Error("Share not found");
+    }
+
+    if (share.settled) {
+        throw new Error("This share is already settled.");
+    }
+
+    if (
+        share.notifiedAt &&
+        Date.now() - new Date(share.notifiedAt).getTime() < NOTIFY_THROTTLE_MS
+    ) {
+        throw new Error(
+            "Reminder was already sent recently. Please wait a few minutes before retrying."
+        );
+    }
+
+    const groupName = share.expense.group.name;
+    const description = share.expense.description;
+    const amount = share.amount.toNumber();
+    const totalExpense = share.expense.amount.toNumber();
+    const paidByName = share.expense.paidByName;
+
+    const result = await sendEmail({
+        to: share.member.email,
+        subject: `Reminder: ${formatINRSubject(amount)} due for "${description}" in ${groupName}`,
+        react: EmailTemplate({
+            userName: share.member.name,
+            type: "settle-reminder",
+            data: {
+                amount,
+                description,
+                groupName,
+                paidByName,
+                totalExpense,
+                senderName: user.name || user.email,
+            },
+        }),
+    });
+
+    if (!result?.success) {
+        const message = result?.error?.message || "Email failed to send.";
+        throw new Error(message);
+    }
+
+    await db.expenseShare.update({
+        where: { id: shareId },
+        data: { notifiedAt: new Date() },
+    });
+
+    revalidatePath(`/groups/${share.expense.groupId}`);
+
+    return {
+        success: true,
+        data: {
+            memberName: share.member.name,
+            memberEmail: share.member.email,
+            amount,
+        },
+    };
+}
+
+function formatINRSubject(n) {
+    try {
+        return new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2,
+        }).format(n);
+    } catch {
+        return `₹${Number(n).toFixed(2)}`;
+    }
 }
 
 // ---------- DELETE GROUP ----------
