@@ -46,6 +46,9 @@ const clerk = clerkMiddleware(async (auth, req) => {
 export default createMiddleware(aj, clerk);
 
 export const config = {
+  // Run on Node.js (not Edge). Clerk + Arcjet combined exceed Vercel's 1 MB
+  // Edge Function limit on the free tier; Node runtime has no such cap.
+  runtime: "nodejs",
   matcher: [
     // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
