@@ -116,6 +116,12 @@ export function AddTransactionForm({
           ? "Transaction updated successfully"
           : "Transaction created successfully"
       );
+      if (transactionResult.budgetWarning) {
+        toast.warning(
+          "Heads up — you just crossed 75% of your monthly budget.",
+          { duration: 6000 }
+        );
+      }
       reset();
       router.push(`/account/${transactionResult.data.accountId}`);
     }

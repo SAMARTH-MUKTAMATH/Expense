@@ -5,7 +5,7 @@ import { SquarePenIcon } from "@/components/ui/square-pen";
 import { LayoutGridIcon } from "@/components/ui/layout-grid";
 import Link from "next/link";
 import { Users } from "lucide-react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
 import { HandCoinsIcon } from "@/components/ui/hand-coins";
 
@@ -33,7 +33,7 @@ const Header = async () => {
                         className="hidden md:flex items-center gap-7"
                         suppressHydrationWarning
                     >
-                        <SignedOut>
+                        <Show when="signed-out">
                             <a
                                 href="#features"
                                 className="text-sm text-gray-400 hover:text-[#89E900] transition-colors"
@@ -52,14 +52,14 @@ const Header = async () => {
                             >
                                 Testimonials
                             </a>
-                        </SignedOut>
+                        </Show>
                     </div>
 
                     <div
                         className="flex items-center gap-2 sm:gap-3"
                         suppressHydrationWarning
                     >
-                        <SignedIn>
+                        <Show when="signed-in">
                             <Link href="/dashboard">
                                 <Button
                                     variant="outline"
@@ -84,8 +84,8 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Add Transaction</span>
                                 </Button>
                             </Link>
-                        </SignedIn>
-                        <SignedOut>
+                        </Show>
+                        <Show when="signed-out">
                             <SignInButton forceRedirectUrl="/dashboard">
                                 <Button
                                     variant="ghost"
@@ -100,8 +100,8 @@ const Header = async () => {
                                     Get Started
                                 </Button>
                             </SignInButton>
-                        </SignedOut>
-                        <SignedIn>
+                        </Show>
+                        <Show when="signed-in">
                             <span suppressHydrationWarning>
                                 <UserButton
                                     appearance={{
@@ -111,7 +111,7 @@ const Header = async () => {
                                     }}
                                 />
                             </span>
-                        </SignedIn>
+                        </Show>
                     </div>
                 </nav>
             </div>

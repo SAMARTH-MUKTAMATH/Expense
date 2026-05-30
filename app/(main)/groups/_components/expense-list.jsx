@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   Receipt,
   Download,
+  Mail,
   Check,
   RotateCcw,
   Calendar as CalendarIcon,
@@ -18,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { formatINR } from "@/lib/utils";
 import {
   getNotifyPayload,
+  notifyMemberByEmail,
   settleShare,
   unsettleShare,
 } from "@/actions/groups";
@@ -235,9 +237,9 @@ function ExpenseItem({ expense, groupName }) {
 function ShareRow({ share, expense, groupName }) {
   const [busy, setBusy] = useState(null);
 
-  const handleNotify = async () => {
+  const handleDownload = async () => {
     try {
-      setBusy("notify");
+      setBusy("download");
       const res = await getNotifyPayload(share.id);
       if (!res?.success) throw new Error("Could not prepare bill");
       const text = formatBillText(res.data);
@@ -246,6 +248,19 @@ function ShareRow({ share, expense, groupName }) {
       toast.success(`Bill downloaded for ${res.data.member.name}`);
     } catch (err) {
       toast.error(err.message || "Failed to prepare bill");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleEmail = async () => {
+    try {
+      setBusy("email");
+      const res = await notifyMemberByEmail(share.id);
+      if (!res?.success) throw new Error("Email failed");
+      toast.success(`Reminder emailed to ${res.data.memberName}`);
+    } catch (err) {
+      toast.error(err.message || "Email failed");
     } finally {
       setBusy(null);
     }
@@ -338,14 +353,26 @@ function ShareRow({ share, expense, groupName }) {
         ) : (
           <>
             <Button
-              size="sm"
+              size="icon"
               variant="ghost"
-              className="h-7 text-xs text-brand hover:bg-brand/10 hover:text-brand gap-1"
-              onClick={handleNotify}
-              disabled={busy === "notify"}
+              className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/5"
+              onClick={handleDownload}
+              disabled={busy === "download"}
+              aria-label="Download bill"
+              title="Download bill (.txt)"
             >
               <Download className="h-3.5 w-3.5" />
-              {busy === "notify" ? "..." : "Notify"}
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7 text-brand hover:bg-brand/10 hover:text-brand"
+              onClick={handleEmail}
+              disabled={busy === "email"}
+              aria-label="Email reminder"
+              title="Send email reminder"
+            >
+              <Mail className="h-3.5 w-3.5" />
             </Button>
             <Button
               size="sm"
