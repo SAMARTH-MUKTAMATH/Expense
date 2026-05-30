@@ -6,6 +6,56 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 import { checkUser } from "@/lib/checkUser";
+import { inngest } from "@/lib/inngest/client";
+
+const BUDGET_THRESHOLD_PCT = 75;
+
+async function checkBudgetCrossing({ userId, account, addedAmount }) {
+    if (!account.isDefault) return false;
+    const budget = await db.budget.findUnique({ where: { userId } });
+    if (!budget) return false;
+
+    const startDate = new Date();
+    startDate.setDate(1);
+    startDate.setHours(0, 0, 0, 0);
+
+    const sum = await db.transaction.aggregate({
+        where: {
+            userId,
+            accountId: account.id,
+            type: "EXPENSE",
+            date: { gte: startDate },
+        },
+        _sum: { amount: true },
+    });
+    const totalAfter = sum._sum.amount?.toNumber() || 0;
+    const totalBefore = totalAfter - addedAmount;
+    const budgetAmount = budget.amount.toNumber();
+    if (budgetAmount <= 0) return false;
+
+    const justCrossed =
+        (totalBefore / budgetAmount) * 100 < BUDGET_THRESHOLD_PCT &&
+        (totalAfter / budgetAmount) * 100 >= BUDGET_THRESHOLD_PCT;
+
+    if (!justCrossed) return false;
+
+    const alreadyAlertedThisMonth =
+        budget.lastAlertSent &&
+        new Date(budget.lastAlertSent).getMonth() === new Date().getMonth() &&
+        new Date(budget.lastAlertSent).getFullYear() === new Date().getFullYear();
+
+    if (!alreadyAlertedThisMonth) {
+        try {
+            await inngest.send({
+                name: "budget.threshold.crossed",
+                data: { budgetId: budget.id, userId, accountId: account.id },
+            });
+        } catch (err) {
+            console.error("Failed to fire budget.threshold.crossed:", err);
+        }
+    }
+    return true;
+}
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -82,10 +132,27 @@ export async function createTransaction(data) {
             return newTransaction;
         });
 
+        let budgetWarning = false;
+        if (data.type === "EXPENSE") {
+            try {
+                budgetWarning = await checkBudgetCrossing({
+                    userId: user.id,
+                    account,
+                    addedAmount: data.amount,
+                });
+            } catch (err) {
+                console.error("Budget crossing check failed:", err);
+            }
+        }
+
         revalidatePath("/dashboard");
         revalidatePath(`/account/${transaction.accountId}`);
 
-        return { success: true, data: serializeAmount(transaction) };
+        return {
+            success: true,
+            data: serializeAmount(transaction),
+            budgetWarning,
+        };
     } catch (error) {
         throw new Error(error.message);
     }
