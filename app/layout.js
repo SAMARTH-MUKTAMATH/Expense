@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import IntroScreen from "@/components/intro-screen";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { Suspense } from "react";
 
 import { ClerkProvider } from "@clerk/nextjs";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${inter.variable} ${spaceGrotesk.variable} ${outfit.variable} ${inter.className} antialiased`}
         >
+          <SmoothScroll />
           <IntroScreen />
           <Suspense fallback={null}>
             <Header />

@@ -8,6 +8,7 @@ import { Users } from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
 import { HandCoinsIcon } from "@/components/ui/hand-coins";
+import { MobileMenu } from "@/components/mobile-menu";
 
 const Header = async () => {
     await checkUser();
@@ -60,7 +61,13 @@ const Header = async () => {
                         suppressHydrationWarning
                     >
                         <Show when="signed-in">
-                            <Link href="/dashboard">
+                            {/* Mobile: single Menu dropdown collapsing the 3 secondary nav links */}
+                            <div className="sm:hidden">
+                                <MobileMenu />
+                            </div>
+
+                            {/* sm+ : show the 3 nav buttons inline */}
+                            <Link href="/dashboard" className="hidden sm:inline-flex">
                                 <Button
                                     variant="outline"
                                     className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
@@ -69,7 +76,7 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Dashboard</span>
                                 </Button>
                             </Link>
-                            <Link href="/groups">
+                            <Link href="/groups" className="hidden sm:inline-flex">
                                 <Button
                                     variant="outline"
                                     className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
@@ -78,7 +85,7 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Splitwise</span>
                                 </Button>
                             </Link>
-                            <Link href="/advisor">
+                            <Link href="/advisor" className="hidden sm:inline-flex">
                                 <Button
                                     variant="outline"
                                     className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
@@ -87,6 +94,8 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Financial Advice</span>
                                 </Button>
                             </Link>
+
+                            {/* Always visible: Add Transaction (icon-only on mobile) */}
                             <Link href="/transaction/create">
                                 <Button className="group gap-2 btn-primary">
                                     <SquarePenIcon size={18} />
