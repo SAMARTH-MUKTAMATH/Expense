@@ -45,6 +45,25 @@ export async function requestAdvisorReport(deliveryMode = "web") {
   return { success: true, deliveryMode };
 }
 
+/**
+ * Used by the front-end loader to poll for a freshly-generated report.
+ * Returns the latest report row IF it was created after `sinceMs` (epoch ms),
+ * otherwise null. The component polls until non-null then refreshes the page.
+ *
+ * @param {number} sinceMs — Date.now() captured at click time
+ */
+export async function getReportNewerThan(sinceMs) {
+  const user = await checkUser();
+  if (!user) throw new Error("Unauthorized");
+  const since = new Date(sinceMs);
+  const r = await db.financialReport.findFirst({
+    where: { userId: user.id, createdAt: { gt: since } },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, createdAt: true },
+  });
+  return r ? { id: r.id, createdAt: r.createdAt.toISOString() } : null;
+}
+
 export async function getMyReports() {
   const user = await checkUser();
   if (!user) throw new Error("Unauthorized");

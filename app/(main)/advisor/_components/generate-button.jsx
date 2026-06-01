@@ -13,13 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SparklesIcon } from "@/components/ui/sparkles";
 import { toast } from "sonner";
-import { requestAdvisorReport } from "@/actions/advisor";
+import { requestAdvisorReport, getReportNewerThan } from "@/actions/advisor";
 
-// Total wait estimate. Gemini + DB + email step usually finish in ~30s. We
-// give a small cushion. After this elapses we trigger a router.refresh which
-// re-fetches the report list — if the real report has landed it'll appear and
-// the pending card disappears via the unmount.
-const WAIT_MS = 38_000;
+// Hard ceiling on the loading state. If the Inngest run is still not done by
+// MAX_WAIT_MS we stop polling and show a "taking longer than usual" message.
+const MAX_WAIT_MS = 120_000;
+const POLL_INTERVAL_MS = 3_000;
 
 const STATUS_MESSAGES = [
   { at: 0,     text: "Pulling your latest transactions..." },
@@ -43,34 +42,61 @@ export function GenerateButton() {
   const [, startTransition] = useTransition();
   const [pendingMode, setPendingMode] = useState(null); // "web" | "email" | null
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [stalled, setStalled] = useState(false); // true after MAX_WAIT_MS with no report
   const startedAtRef = useRef(null);
+  const sinceMsRef = useRef(null); // server timestamp boundary for polling
   const router = useRouter();
 
-  // Tick while pending so the progress bar + status messages update.
+  // While pending, do two things in parallel:
+  //   1. Tick the progress UI every 200ms.
+  //   2. Poll the DB every POLL_INTERVAL_MS for a report newer than sinceMsRef.
+  // First report that lands wins — we refresh + clear pending.
   useEffect(() => {
     if (!pendingMode) return;
     startedAtRef.current = performance.now();
     setElapsedMs(0);
+    setStalled(false);
+    let cancelled = false;
 
-    const tick = setInterval(() => {
-      const now = performance.now();
-      const e = now - startedAtRef.current;
+    const tickInterval = setInterval(() => {
+      if (cancelled) return;
+      const e = performance.now() - startedAtRef.current;
       setElapsedMs(e);
-      if (e >= WAIT_MS) {
-        clearInterval(tick);
-        // Refresh the page to fetch the new report; the pending state clears
-        // when the user sees the new card.
-        router.refresh();
-        setPendingMode(null);
+      if (e >= MAX_WAIT_MS) {
+        setStalled(true);
+        clearInterval(tickInterval);
       }
     }, 200);
 
-    return () => clearInterval(tick);
+    const pollInterval = setInterval(async () => {
+      if (cancelled) return;
+      try {
+        const found = await getReportNewerThan(sinceMsRef.current);
+        if (found) {
+          cancelled = true;
+          clearInterval(pollInterval);
+          clearInterval(tickInterval);
+          router.refresh();
+          setPendingMode(null);
+        }
+      } catch {
+        // Network blip — keep polling; surface only if MAX_WAIT trips.
+      }
+    }, POLL_INTERVAL_MS);
+
+    return () => {
+      cancelled = true;
+      clearInterval(tickInterval);
+      clearInterval(pollInterval);
+    };
   }, [pendingMode, router]);
 
   const run = (deliveryMode) => {
     startTransition(async () => {
       try {
+        // Capture the boundary BEFORE the action runs so any report created
+        // by this exact request matches `createdAt > sinceMs`.
+        sinceMsRef.current = Date.now();
         const res = await requestAdvisorReport(deliveryMode);
         if (res?.rateLimited) {
           toast.warning(res.message || "Please wait before generating another report.");
@@ -80,7 +106,6 @@ export function GenerateButton() {
           toast.error("Could not start the report. Please try again.");
           return;
         }
-        // Kick off the engaging loader
         setPendingMode(deliveryMode);
         toast.success(
           deliveryMode === "email"
@@ -94,8 +119,12 @@ export function GenerateButton() {
   };
 
   const isPending = !!pendingMode;
-  const progressPct = Math.min(100, (elapsedMs / WAIT_MS) * 100);
-  const statusText = pickStatus(elapsedMs);
+  // Progress bar caps at 95% while waiting so it never looks "done" before
+  // the report actually lands; only when the poll finds it do we unmount.
+  const progressPct = stalled ? 100 : Math.min(95, (elapsedMs / 35_000) * 95);
+  const statusText = stalled
+    ? "Still working — this is taking longer than usual. We'll keep checking."
+    : pickStatus(elapsedMs);
 
   return (
     <>
