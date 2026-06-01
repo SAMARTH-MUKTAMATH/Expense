@@ -8,7 +8,7 @@ export default function AdvisorLayout({ children }) {
         <p className="text-xs font-bold uppercase tracking-wider text-[#89E900]">
           AI-powered
         </p>
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white">
           Financial Advice
         </h1>
         <p className="text-sm md:text-base text-gray-400 max-w-2xl">

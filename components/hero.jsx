@@ -33,9 +33,9 @@ const HeroSection = () => {
     }, []);
 
     return (
-        <section className="relative pt-12 pb-16 px-4">
+        <section className="relative pt-12 pb-16 px-4 overflow-hidden">
             {/* Outer lime glow halos — bleed lime into the dark page bg around the panel corners */}
-            <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
+            <div aria-hidden className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
                 <div className="absolute top-0 left-1/4 h-[28rem] w-[28rem] rounded-full bg-[#89E900]/20 blur-3xl animate-float-slow" />
                 <div className="absolute top-1/3 right-0 h-[24rem] w-[24rem] rounded-full bg-[#89E900]/15 blur-3xl animate-float" />
                 <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[#89E900]/12 blur-3xl" />
@@ -76,8 +76,8 @@ const HeroSection = () => {
                         Smart finance, made for India
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-[88px] leading-[1.05] pb-4 font-extrabold tracking-tighter text-[#0a0a0a] animate-fade-up">
-                        Manage your money <br />
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[88px] leading-[1.1] md:leading-[1.05] pb-4 font-extrabold tracking-tighter text-[#0a0a0a] animate-fade-up">
+                        Manage your money <br className="hidden sm:inline" />
                         with intelligence.
                     </h1>
 
@@ -217,28 +217,29 @@ function DashboardPreview() {
                     </div>
                 </div>
 
-                <div className="p-4 sm:p-6">
+                <div className="p-3 sm:p-6">
                     {/* Header */}
-                    <div className="mb-5 flex items-end justify-between">
-                        <div>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-[#89E900]">
+                    <div className="mb-3 sm:mb-5 flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                            <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#89E900]">
                                 Overview
                             </p>
-                            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+                            <h3 className="text-lg sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
                                 Dashboard
                             </h3>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="h-7 px-2.5 rounded-md bg-[#89E900] text-[#0a0a0a] text-[10px] font-semibold flex items-center gap-1 shadow-md shadow-[#89E900]/30">
-                                <SparklesIcon size={14} />
+                        <div className="flex items-center gap-2 shrink-0">
+                            <div className="h-6 sm:h-7 px-2 sm:px-2.5 rounded-md bg-[#89E900] text-[#0a0a0a] text-[9px] sm:text-[10px] font-semibold flex items-center gap-1 shadow-md shadow-[#89E900]/30 whitespace-nowrap">
+                                <SparklesIcon size={12} />
                                 Add transaction
                             </div>
-                            <div className="h-8 w-8 rounded-full bg-[#89E900] ring-2 ring-[#89E900]/40" />
+                            {/* Avatar mock — hidden on mobile to avoid the lone green dot */}
+                            <div className="hidden sm:block h-8 w-8 rounded-full bg-[#89E900] ring-2 ring-[#89E900]/40" />
                         </div>
                     </div>
 
                     {/* Budget card */}
-                    <div className="mb-4 rounded-xl border border-white/10 bg-[#161616] p-4 relative overflow-hidden">
+                    <div className="mb-3 sm:mb-4 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4 relative overflow-hidden">
                         <div
                             aria-hidden
                             className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-[#89E900]/20 blur-2xl"
@@ -278,14 +279,14 @@ function DashboardPreview() {
                     </div>
 
                     {/* Chart + Recent */}
-                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-4">
-                        <div className="sm:col-span-3 rounded-xl border border-white/10 bg-[#161616] p-4">
-                            <div className="flex items-center justify-between mb-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-3 sm:mb-4">
+                        <div className="sm:col-span-3 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4">
+                            <div className="flex items-center justify-between mb-2 sm:mb-3">
                                 <div className="flex items-center gap-2">
-                                    <div className="h-7 w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
-                                        <TrendingUpIcon size={14} />
+                                    <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
+                                        <TrendingUpIcon size={12} />
                                     </div>
-                                    <p className="text-xs font-semibold text-white">
+                                    <p className="text-[11px] sm:text-xs font-semibold text-white">
                                         Transaction overview
                                     </p>
                                 </div>
@@ -293,25 +294,25 @@ function DashboardPreview() {
                                     30 days
                                 </span>
                             </div>
-                            <div className="grid grid-cols-3 gap-2 mb-3">
-                                <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2 py-1.5 text-center">
+                            <div className="grid grid-cols-3 gap-2 mb-2 sm:mb-3">
+                                <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-1 sm:px-2 sm:py-1.5 text-center">
                                     <p className="text-[9px] text-gray-400">Income</p>
-                                    <p className="text-xs font-bold text-emerald-400">
+                                    <p className="text-[11px] sm:text-xs font-bold text-emerald-400">
                                         ₹84,000
                                     </p>
                                 </div>
-                                <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-2 py-1.5 text-center">
+                                <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-1.5 py-1 sm:px-2 sm:py-1.5 text-center">
                                     <p className="text-[9px] text-gray-400">Expense</p>
-                                    <p className="text-xs font-bold text-red-400">₹38,400</p>
+                                    <p className="text-[11px] sm:text-xs font-bold text-red-400">₹38,400</p>
                                 </div>
-                                <div className="rounded-lg bg-[#89E900]/10 border border-[#89E900]/20 px-2 py-1.5 text-center">
+                                <div className="rounded-lg bg-[#89E900]/10 border border-[#89E900]/20 px-1.5 py-1 sm:px-2 sm:py-1.5 text-center">
                                     <p className="text-[9px] text-gray-400">Net</p>
-                                    <p className="text-xs font-bold text-[#89E900]">
+                                    <p className="text-[11px] sm:text-xs font-bold text-[#89E900]">
                                         ₹45,600
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-end gap-1.5 h-24">
+                            <div className="flex items-end gap-1 sm:gap-1.5 h-14 sm:h-24">
                                 {[
                                     { i: 70, e: 30 },
                                     { i: 45, e: 55 },
@@ -343,12 +344,12 @@ function DashboardPreview() {
                             </div>
                         </div>
 
-                        <div className="sm:col-span-2 rounded-xl border border-white/10 bg-[#161616] p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="h-7 w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
-                                    <ReceiptIcon size={14} />
+                        <div className="sm:col-span-2 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4">
+                            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                                <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
+                                    <ReceiptIcon size={12} />
                                 </div>
-                                <p className="text-xs font-semibold text-white">Recent</p>
+                                <p className="text-[11px] sm:text-xs font-semibold text-white">Recent</p>
                             </div>
                             <div className="space-y-2">
                                 {[
@@ -441,27 +442,31 @@ function DashboardPreview() {
                         ].map((a, idx) => (
                             <div
                                 key={idx}
-                                className="relative overflow-hidden rounded-xl border border-white/10 bg-[#161616] p-3"
+                                className="relative overflow-hidden rounded-xl border border-white/10 bg-[#161616] p-2 sm:p-3"
                             >
-                                <div className="relative flex items-center gap-2 mb-2">
+                                {/* Icon row — on mobile the icon is smaller, "Default" badge collapses to a dot */}
+                                <div className="relative flex items-center justify-between mb-1.5 sm:mb-2">
                                     <div
-                                        className={`h-7 w-7 rounded-lg flex items-center justify-center ${a.bg} ${a.fg}`}
+                                        className={`h-5 w-5 sm:h-7 sm:w-7 rounded-md sm:rounded-lg flex items-center justify-center ${a.bg} ${a.fg}`}
                                     >
-                                        <WalletIcon size={14} />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-[11px] font-semibold truncate leading-tight text-white">
-                                            {a.name}
-                                        </p>
-                                        <p className="text-[9px] text-gray-400">{a.type}</p>
+                                        <WalletIcon size={12} />
                                     </div>
                                     {a.isDefault && (
-                                        <span className="text-[8px] font-bold text-[#0a0a0a] bg-[#89E900] px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                                            Default
-                                        </span>
+                                        <>
+                                            <span className="sm:hidden h-2 w-2 rounded-full bg-[#89E900]" />
+                                            <span className="hidden sm:inline text-[8px] font-bold text-[#0a0a0a] bg-[#89E900] px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                                                Default
+                                            </span>
+                                        </>
                                     )}
                                 </div>
-                                <p className="relative text-base font-extrabold tracking-tight text-white">
+                                <p className="text-[9px] sm:text-[11px] font-semibold truncate leading-tight text-white">
+                                    {a.name}
+                                </p>
+                                <p className="text-[8px] sm:text-[9px] text-gray-400 mb-1">
+                                    {a.type}
+                                </p>
+                                <p className="relative text-xs sm:text-base font-extrabold tracking-tight text-white truncate">
                                     {a.balance}
                                 </p>
                             </div>

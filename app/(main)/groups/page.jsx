@@ -14,7 +14,7 @@ export default async function GroupsPage() {
           <p className="text-xs font-bold uppercase tracking-wider text-brand">
             Bill splitting
           </p>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white">
             Splitwise
           </h1>
           <p className="text-sm text-gray-400 mt-1">

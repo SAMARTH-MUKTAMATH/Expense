@@ -53,9 +53,9 @@ export default function IntroScreen() {
             <motion.div
               layout
               transition={{
-                layout: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+                layout: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
               }}
-              className="relative flex items-center gap-4 sm:gap-6 md:gap-8"
+              className="relative flex items-center gap-3 sm:gap-6 md:gap-8 will-change-transform"
             >
               {/* Hand-coins icon: drops in HUGE, plays its coin animation,
                   then smoothly zooms out as the wordmark slides in next to it */}
@@ -80,7 +80,7 @@ export default function IntroScreen() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
               >
-                <HandCoinsIcon ref={iconRef} size={72} />
+                <HandCoinsIcon ref={iconRef} size={56} />
               </motion.div>
 
               {/* Wordmark slides in from the right of the icon */}
@@ -116,13 +116,13 @@ function Wordmark() {
   return (
     <div className="flex items-baseline gap-[0.04em] whitespace-nowrap">
       <span
-        className="text-7xl sm:text-8xl md:text-9xl tracking-tight text-white"
+        className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight text-white"
         style={{ fontWeight: 700 }}
       >
         Budget
       </span>
       <span
-        className="text-7xl sm:text-8xl md:text-9xl tracking-tight text-brand"
+        className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight text-brand"
         style={{ fontWeight: 400 }}
       >
         FLOW

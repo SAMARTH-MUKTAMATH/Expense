@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }) {
         <p className="text-xs font-bold uppercase tracking-wider text-[#89E900]">
           Overview
         </p>
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-white">
           Dashboard
         </h1>
       </div>
