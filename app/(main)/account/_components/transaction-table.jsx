@@ -273,8 +273,8 @@ export function TransactionTable({ transactions }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-xl border border-white/10 bg-[#161616] overflow-hidden">
-        <Table>
+      <div className="rounded-xl border border-white/10 bg-[#161616] overflow-x-auto">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]">

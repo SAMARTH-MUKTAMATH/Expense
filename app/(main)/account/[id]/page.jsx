@@ -34,7 +34,7 @@ export default async function AccountPage({ params }) {
                 {account.type.charAt(0) + account.type.slice(1).toLowerCase()}{" "}
                 account
               </p>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.15] py-1 text-white capitalize">
+              <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.15] py-1 text-white capitalize break-words">
                 {account.name}
               </h1>
             </div>

@@ -15,7 +15,7 @@ import { ArrowRightIcon } from "@/components/ui/arrow-right";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <HeroSection />
 
       {/* Stats */}

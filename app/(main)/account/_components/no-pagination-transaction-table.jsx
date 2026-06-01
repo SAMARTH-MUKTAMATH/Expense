@@ -242,8 +242,8 @@ export function NoPaginationTransactionTable({ transactions }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border overflow-x-auto">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]">
