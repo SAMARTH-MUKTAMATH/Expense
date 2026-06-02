@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import IntroScreen from "@/components/intro-screen";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { OnboardingTour } from "@/components/onboarding-tour";
 import { Suspense } from "react";
 
 import { ClerkProvider } from "@clerk/nextjs";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
         >
           <SmoothScroll />
           <IntroScreen />
+          <OnboardingTour />
           <Suspense fallback={null}>
             <Header />
           </Suspense>

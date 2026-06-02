@@ -9,6 +9,7 @@ import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
 import { HandCoinsIcon } from "@/components/ui/hand-coins";
 import { MobileMenu } from "@/components/mobile-menu";
+import { HelpButton } from "@/components/help-button";
 
 const Header = async () => {
     await checkUser();
@@ -94,6 +95,9 @@ const Header = async () => {
                                     <span className="hidden sm:inline">Financial Advice</span>
                                 </Button>
                             </Link>
+
+                            {/* Help / tour — re-opens the onboarding carousel */}
+                            <HelpButton />
 
                             {/* Always visible: Add Transaction (icon-only on mobile) */}
                             <Link href="/transaction/create">
