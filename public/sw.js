@@ -1,25 +1,62 @@
-// Minimal service worker — exists primarily so Chromium's PWA install
-// criteria are satisfied (the install button only completes when there is a
-// registered SW with a fetch handler scoped to the start_url).
+// Service worker — handles PWA install criteria + Web Push delivery.
 //
-// We deliberately do NOT cache responses here. The app is server-rendered
-// and data-driven; serving stale dashboards / transactions would be more
-// harmful than helpful. If real offline support is added later, this is
-// the file to extend (or replace with @serwist/next).
+// Push payload format (sent by lib/push.js):
+//   { title: string, body: string, url?: string, tag?: string }
 
 self.addEventListener("install", () => {
-  // Activate immediately instead of waiting for old tabs to close.
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  // Take control of any open clients right away.
   event.waitUntil(self.clients.claim());
 });
 
-// Pass-through fetch handler. Chromium requires *some* fetch listener to be
-// registered for installability — `return` here means the browser handles
-// the request normally, no rewrite or interception.
+// Pass-through fetch handler — required by Chromium for PWA installability,
+// but we don't intercept / cache anything.
 self.addEventListener("fetch", () => {
   return;
+});
+
+// Show a notification when the server pushes one.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: "BudgetFLOW", body: event.data?.text() || "" };
+  }
+
+  const title = data.title || "BudgetFLOW";
+  const options = {
+    body: data.body || "",
+    icon: "/icon",
+    badge: "/icon",
+    tag: data.tag || "budgetflow",
+    data: { url: data.url || "/dashboard" },
+    // Lower-priority dismissable banner; user can swipe away.
+    requireInteraction: false,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Focus an existing tab or open a new one when the user taps the notification.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || "/dashboard";
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.endsWith(targetUrl) && "focus" in client) {
+            return client.focus();
+          }
+        }
+        if (self.clients.openWindow) {
+          return self.clients.openWindow(targetUrl);
+        }
+      })
+  );
 });
