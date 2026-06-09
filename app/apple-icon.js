@@ -1,19 +1,18 @@
 import { ImageResponse } from "next/og";
 
-// iOS home-screen icon. 180×180 is Apple's largest standard touch-icon size.
-// Same lime-on-dark brand mark as /icon, scaled for the iOS tile.
+// iOS home-screen icon (180×180). Same dark+lime-bordered design as /icon.
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
 const HAND_COINS = (
   <svg
-    width="110"
-    height="110"
+    width="78"
+    height="78"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#0a0a0a"
-    strokeWidth="2.2"
+    stroke="#ffffff"
+    strokeWidth="1.9"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -32,13 +31,25 @@ export default function AppleIcon() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#89E900",
+          background: "#0a0a0a",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        {HAND_COINS}
+        <div
+          style={{
+            width: "62%",
+            height: "62%",
+            border: "8px solid #89E900",
+            borderRadius: "22%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {HAND_COINS}
+        </div>
       </div>
     ),
     { ...size }

@@ -7,7 +7,7 @@
  */
 export default function manifest() {
   return {
-    name: "BudgetFLOW — AI-powered finance for India",
+    name: "BudgetFLOW",
     short_name: "BudgetFLOW",
     description:
       "Your AI-powered finance companion. Track every rupee, smarter.",
@@ -15,8 +15,10 @@ export default function manifest() {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
+    // Background must match the icon's outer color so the Android splash
+    // doesn't show a jarring frame around the lime square.
     background_color: "#0a0a0a",
-    theme_color: "#89E900",
+    theme_color: "#0a0a0a",
     icons: [
       // Same dynamic icon source for both — Android/Chrome will downscale
       // for the smaller bucket. This dodges having a third icon route and

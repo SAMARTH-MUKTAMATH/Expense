@@ -1,23 +1,20 @@
 import { ImageResponse } from "next/og";
 
-// Next 16 file convention: this route is auto-served at /icon as a 512×512
-// PNG and the framework injects <link rel="icon"> automatically. We use
-// ImageResponse so the icon is generated from the same brand DNA as the
-// header — lime fill + dark HandCoins mark — instead of being a stale image.
+// Next 16 file convention: auto-served at /icon, framework auto-injects
+// <link rel="icon">. Design mirrors the website header: dark canvas, lime
+// bordered rounded square, HandCoins mark inside.
 
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-// HandCoins SVG path data from lucide. Rendered as a single inline <svg>
-// inside the ImageResponse JSX (only HTML/CSS + <svg> elements are allowed).
 const HAND_COINS = (
   <svg
-    width="320"
-    height="320"
+    width="220"
+    height="220"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#0a0a0a"
-    strokeWidth="2"
+    stroke="#ffffff"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -36,13 +33,25 @@ export default function Icon() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#89E900",
+          background: "#0a0a0a",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        {HAND_COINS}
+        <div
+          style={{
+            width: "62%",
+            height: "62%",
+            border: "20px solid #89E900",
+            borderRadius: "22%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {HAND_COINS}
+        </div>
       </div>
     ),
     { ...size }
