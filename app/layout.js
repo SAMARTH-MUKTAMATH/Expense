@@ -7,6 +7,7 @@ import IntroScreen from "@/components/intro-screen";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { OnboardingTour } from "@/components/onboarding-tour";
 import { InstallPwaHint } from "@/components/install-pwa-hint";
+import { RegisterSW } from "@/components/register-sw";
 import { Suspense } from "react";
 
 import { ClerkProvider } from "@clerk/nextjs";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
           className={`${inter.variable} ${spaceGrotesk.variable} ${outfit.variable} ${inter.className} antialiased`}
         >
           <SmoothScroll />
+          <RegisterSW />
           <IntroScreen />
           <OnboardingTour />
           <InstallPwaHint />

@@ -18,15 +18,12 @@ export default function manifest() {
     background_color: "#0a0a0a",
     theme_color: "#89E900",
     icons: [
-      {
-        src: "/icon-192.png",
-        sizes: "192x192",
-        type: "image/png",
-        purpose: "any maskable",
-      },
+      // Same dynamic icon source for both — Android/Chrome will downscale
+      // for the smaller bucket. This dodges having a third icon route and
+      // keeps the brand mark in one place.
       {
         src: "/icon",
-        sizes: "512x512",
+        sizes: "192x192 512x512",
         type: "image/png",
         purpose: "any maskable",
       },
