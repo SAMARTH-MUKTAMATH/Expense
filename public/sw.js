@@ -1,62 +1,20 @@
-// Service worker — handles PWA install criteria + Web Push delivery.
-//
-// Push payload format (sent by lib/push.js):
-//   { title: string, body: string, url?: string, tag?: string }
+// Minimal service worker — exists solely to satisfy Chromium's PWA install
+// criteria (the "Install app" option requires a registered SW with a fetch
+// handler scoped to start_url). We do not cache or intercept anything.
 
 self.addEventListener("install", () => {
+  // Activate immediately instead of waiting for old tabs to close.
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
+  // Take control of any open clients right away.
   event.waitUntil(self.clients.claim());
 });
 
-// Pass-through fetch handler — required by Chromium for PWA installability,
-// but we don't intercept / cache anything.
+// Pass-through fetch handler. Chromium requires *some* fetch listener to be
+// registered for installability — returning here lets the browser handle the
+// request normally, no rewrite or interception.
 self.addEventListener("fetch", () => {
   return;
-});
-
-// Show a notification when the server pushes one.
-self.addEventListener("push", (event) => {
-  let data = {};
-  try {
-    data = event.data ? event.data.json() : {};
-  } catch {
-    data = { title: "BudgetFLOW", body: event.data?.text() || "" };
-  }
-
-  const title = data.title || "BudgetFLOW";
-  const options = {
-    body: data.body || "",
-    icon: "/icon",
-    badge: "/icon",
-    tag: data.tag || "budgetflow",
-    data: { url: data.url || "/dashboard" },
-    // Lower-priority dismissable banner; user can swipe away.
-    requireInteraction: false,
-  };
-
-  event.waitUntil(self.registration.showNotification(title, options));
-});
-
-// Focus an existing tab or open a new one when the user taps the notification.
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  const targetUrl = event.notification.data?.url || "/dashboard";
-
-  event.waitUntil(
-    self.clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientList) => {
-        for (const client of clientList) {
-          if (client.url.endsWith(targetUrl) && "focus" in client) {
-            return client.focus();
-          }
-        }
-        if (self.clients.openWindow) {
-          return self.clients.openWindow(targetUrl);
-        }
-      })
-  );
 });

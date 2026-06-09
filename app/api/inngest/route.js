@@ -7,7 +7,6 @@ import {
   notifyBudgetThreshold,
   runFinancialAdvisor,
   triggerFinancialAdvisor,
-  testPushEvery2Min,
 } from "@/lib/inngest/function";
 
 export const { GET, POST, PUT } = serve({
@@ -19,6 +18,5 @@ export const { GET, POST, PUT } = serve({
     notifyBudgetThreshold,
     runFinancialAdvisor,
     triggerFinancialAdvisor,
-    testPushEvery2Min,
   ],
 });

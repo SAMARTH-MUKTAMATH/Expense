@@ -4,9 +4,8 @@ import { AccountCard } from "./_components/account-card";
 import { CreateAccountDrawer } from "@/components/create-account-drawer";
 import { BudgetProgress } from "./_components/budget-progress";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus as PlusIcon, Bell } from "lucide-react";
+import { Plus as PlusIcon } from "lucide-react";
 import { DashboardOverview } from "./_components/transaction-overview";
-import { EnablePushButton } from "@/components/enable-push-button";
 
 export default async function DashboardPage() {
   const [accounts, transactions] = await Promise.all([
@@ -23,16 +22,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-[#161616] px-4 py-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <Bell size={16} className="text-brand shrink-0" />
-          <p className="text-sm text-gray-300 truncate">
-            Get push alerts when you cross your budget.
-          </p>
-        </div>
-        <EnablePushButton compact />
-      </div>
-
       <BudgetProgress
         initialBudget={budgetData?.budget}
         currentExpenses={budgetData?.currentExpenses || 0}
