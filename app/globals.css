@@ -305,6 +305,13 @@
   animation: fade-up 0.6s ease-out both;
 }
 
+/* Shimmer used by the advisor "AI is generating" loader to sweep light
+   across the progress bar fill. */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* Advisor report markdown — dark-theme prose styling. */
 .advisor-prose {
   color: #e5e5e5;

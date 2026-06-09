@@ -1,13 +1,15 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { SparklesIcon } from "@/components/ui/sparkles";
-import { SquarePenIcon } from "@/components/ui/square-pen";
-import { LayoutGridIcon } from "@/components/ui/layout-grid";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import {
+  Sparkles,
+  SquarePen,
+  LayoutGrid,
+  Users,
+  HandCoins,
+} from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
-import { HandCoinsIcon } from "@/components/ui/hand-coins";
 import { MobileMenu } from "@/components/mobile-menu";
 import { HelpButton } from "@/components/help-button";
 
@@ -23,7 +25,7 @@ const Header = async () => {
                 >
                     <Link href="/" className="flex items-center gap-2 group">
                         <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl border-2 border-brand text-white bg-transparent transition-all group-hover:scale-105 group-hover:bg-brand/10">
-                            <HandCoinsIcon size={20} />
+                            <HandCoins size={20} />
                         </span>
                         <span className="text-xl font-bold tracking-tight text-white">
                             <span className="font-extrabold">Budget</span>
@@ -73,7 +75,7 @@ const Header = async () => {
                                     variant="outline"
                                     className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
                                 >
-                                    <LayoutGridIcon size={18} />
+                                    <LayoutGrid size={18} />
                                     <span className="hidden sm:inline">Dashboard</span>
                                 </Button>
                             </Link>
@@ -91,7 +93,7 @@ const Header = async () => {
                                     variant="outline"
                                     className="group gap-2 bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
                                 >
-                                    <SparklesIcon size={18} />
+                                    <Sparkles size={18} />
                                     <span className="hidden sm:inline">Financial Advice</span>
                                 </Button>
                             </Link>
@@ -102,7 +104,7 @@ const Header = async () => {
                             {/* Always visible: Add Transaction (icon-only on mobile) */}
                             <Link href="/transaction/create">
                                 <Button className="group gap-2 btn-primary">
-                                    <SquarePenIcon size={18} />
+                                    <SquarePen size={18} />
                                     <span className="hidden sm:inline">Add Transaction</span>
                                 </Button>
                             </Link>
@@ -118,7 +120,7 @@ const Header = async () => {
                             </SignInButton>
                             <SignInButton forceRedirectUrl="/dashboard">
                                 <Button className="gap-2 btn-primary">
-                                    <SparklesIcon size={16} />
+                                    <Sparkles size={16} />
                                     Get Started
                                 </Button>
                             </SignInButton>

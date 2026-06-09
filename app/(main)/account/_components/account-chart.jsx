@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatINR } from "@/lib/utils";
-import { TrendingUpIcon } from "@/components/ui/trending-up";
+import { TrendingUp as TrendingUpIcon } from "lucide-react";
 import { defaultCategories, categoryColors } from "@/data/categories";
 
 const CATEGORY_NAME_BY_ID = defaultCategories.reduce((acc, c) => {

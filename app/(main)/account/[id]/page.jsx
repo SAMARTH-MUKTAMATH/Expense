@@ -5,7 +5,7 @@ import { TransactionTable } from "../_components/transaction-table";
 import { notFound } from "next/navigation";
 import { AccountChart } from "../_components/account-chart";
 import { formatINR } from "@/lib/utils";
-import { WalletIcon } from "@/components/ui/wallet";
+import { Wallet as WalletIcon } from "lucide-react";
 
 export default async function AccountPage({ params }) {
   const { id } = await params;

@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SparklesIcon } from "@/components/ui/sparkles";
+import { Sparkles, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { requestAdvisorReport, getReportNewerThan } from "@/actions/advisor";
 
@@ -131,7 +131,7 @@ export function GenerateButton() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button disabled={isPending} className="gap-2 btn-primary">
-            <SparklesIcon size={16} />
+            <Sparkles size={16} />
             {isPending ? "Generating..." : "Generate now"}
           </Button>
         </DropdownMenuTrigger>
@@ -180,40 +180,105 @@ export function GenerateButton() {
   );
 }
 
+// Visual progress chips — pre-baked checkpoints we mark as "done" based on
+// elapsed time. Purely cosmetic to make the wait feel like real AI work
+// happening in stages, rather than a single dumb progress bar.
+const PIPELINE_STEPS = [
+  { label: "Transactions", at: 0 },
+  { label: "Budget", at: 5_000 },
+  { label: "Categories", at: 10_000 },
+  { label: "Health score", at: 16_000 },
+  { label: "Forecasting", at: 22_000 },
+  { label: "Insights", at: 28_000 },
+];
+
 function PendingCard({ mode, statusText, progressPct }) {
+  const elapsed = (progressPct / 95) * 35_000; // reverse-engineer for the chips
+
   return (
-    <div className="mt-6 w-full rounded-xl border border-[#89E900]/30 bg-gradient-to-br from-[#161616] via-[#1a1f12] to-[#161616] p-5 sm:p-6 shadow-lg shadow-[#89E900]/10 relative overflow-hidden">
-      {/* Subtle pulsing halo for life */}
+    <div className="mt-6 w-full rounded-xl border border-brand/30 bg-gradient-to-br from-ink-soft via-[#1a1f12] to-ink-soft p-5 sm:p-6 shadow-lg shadow-brand/10 relative overflow-hidden">
+      {/* Pulsing halo */}
       <div
         aria-hidden
-        className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-[#89E900]/15 blur-3xl animate-pulse"
+        className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-brand/15 blur-3xl animate-pulse"
       />
 
       <div className="relative flex items-center gap-3 mb-4">
-        <div className="h-9 w-9 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center shadow-md shadow-[#89E900]/40">
-          <SparklesIcon size={18} className="animate-pulse" />
+        {/* Orbital icon — 3 concentric rotating rings give it an "AI thinking" feel */}
+        <div className="relative h-12 w-12 shrink-0 flex items-center justify-center">
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-full border border-brand/30 animate-[spin_4s_linear_infinite]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-1 rounded-full border border-brand/40 animate-[spin_3s_linear_infinite_reverse]"
+          />
+          <div className="relative h-8 w-8 rounded-lg bg-brand text-ink flex items-center justify-center shadow-md shadow-brand/40">
+            <Sparkles size={16} className="animate-pulse" />
+          </div>
         </div>
+
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wider text-[#89E900]">
-            Generating your report
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand flex items-center gap-1.5">
+            <Loader2 size={10} className="animate-spin" />
+            AI is generating your report
           </p>
-          <p className="text-sm font-semibold text-white truncate">
+          <p className="text-sm font-semibold text-white truncate mt-0.5">
             {statusText}
+            <span className="inline-block ml-0.5 w-[2px] h-[14px] align-middle bg-brand animate-pulse" />
           </p>
         </div>
       </div>
 
+      {/* Shimmer progress bar */}
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-white/5">
         <div
-          className="h-full bg-gradient-to-r from-[#89E900] via-emerald-400 to-[#89E900] transition-[width] duration-200 ease-linear"
+          className="h-full bg-gradient-to-r from-brand via-emerald-300 to-brand transition-[width] duration-200 ease-linear relative"
           style={{ width: `${progressPct}%` }}
-        />
+        >
+          {/* Sliding light streak inside the filled portion */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-[shimmer_1.6s_linear_infinite]"
+            style={{ backgroundSize: "200% 100%" }}
+          />
+        </div>
       </div>
 
-      <p className="mt-3 text-xs text-gray-400">
+      {/* Pipeline chips — done / running / pending */}
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {PIPELINE_STEPS.map((s, i) => {
+          const isDone = elapsed >= (PIPELINE_STEPS[i + 1]?.at ?? Infinity);
+          const isRunning = !isDone && elapsed >= s.at;
+          return (
+            <span
+              key={s.label}
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-colors ${
+                isDone
+                  ? "bg-brand/15 border-brand/40 text-brand"
+                  : isRunning
+                    ? "bg-white/5 border-white/20 text-white animate-pulse"
+                    : "bg-white/[0.02] border-white/10 text-gray-500"
+              }`}
+            >
+              {isDone ? (
+                <Check size={9} strokeWidth={3} />
+              ) : isRunning ? (
+                <Loader2 size={9} className="animate-spin" />
+              ) : (
+                <span className="h-1.5 w-1.5 rounded-full bg-current opacity-50" />
+              )}
+              {s.label}
+            </span>
+          );
+        })}
+      </div>
+
+      <p className="mt-4 text-xs text-gray-400">
         {mode === "email"
-          ? "Hang tight — we're crunching data, generating insights, rendering the PDF, and sending the email. About 30 seconds total."
-          : "Hang tight — we're crunching data and generating insights. About 30 seconds total."}
+          ? "We're crunching data, generating insights, rendering the PDF, and emailing it. About 30 seconds total."
+          : "We're crunching data and generating insights. About 30 seconds total."}
       </p>
     </div>
   );

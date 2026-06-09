@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Edit2 } from "iconsax-react";
-import { Target } from "lucide-react";
-import { CircleCheckIcon } from "@/components/ui/circle-check";
-import { XIcon } from "@/components/ui/x";
+import {
+  Target,
+  CircleCheck as CircleCheckIcon,
+  X as XIcon,
+  Pencil as Edit2,
+} from "lucide-react";
 import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
 

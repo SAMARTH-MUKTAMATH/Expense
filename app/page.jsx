@@ -10,8 +10,7 @@ import {
 } from "@/data/landing";
 import HeroSection from "@/components/hero";
 import Link from "next/link";
-import { MessageText1, Star1 } from "iconsax-react";
-import { ArrowRightIcon } from "@/components/ui/arrow-right";
+import { Quote, Star, ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
   return (
@@ -24,7 +23,7 @@ const LandingPage = () => {
           <div className="relative overflow-hidden rounded-3xl border border-white/10 surface-card p-8 md:p-10">
             <div
               aria-hidden
-              className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-[40rem] rounded-full bg-[#89E900]/10 blur-3xl"
+              className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-[40rem] rounded-full bg-[#89E900]/10 blur-2xl"
             />
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6">
               {statsData.map((stat, index) => (
@@ -67,7 +66,7 @@ const LandingPage = () => {
               >
                 <div
                   aria-hidden
-                  className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-[#89E900]/15 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 blur-3xl"
+                  className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-[#89E900]/15 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 blur-2xl"
                 />
                 <div
                   aria-hidden
@@ -157,7 +156,7 @@ const LandingPage = () => {
                 className="relative overflow-hidden bg-[#161616] border-white/10 hover:border-[#89E900]/30 transition-colors"
               >
                 <CardContent className="pt-6 space-y-4">
-                  <MessageText1 className="h-7 w-7 text-[#89E900]" />
+                  <Quote className="h-7 w-7 text-[#89E900]" />
                   <p className="text-gray-300 leading-relaxed">"{t.quote}"</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-white/10">
                     <Image
@@ -175,7 +174,7 @@ const LandingPage = () => {
                     </div>
                     <div className="ml-auto flex">
                       {[...Array(5)].map((_, i) => (
-                        <Star1
+                        <Star
                           key={i}
                           className="h-3.5 w-3.5 fill-[#89E900] text-[#89E900]"
                         />
@@ -202,11 +201,11 @@ const LandingPage = () => {
             />
             <div
               aria-hidden
-              className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#0a0a0a]/10 blur-3xl"
+              className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#0a0a0a]/10 blur-2xl"
             />
             <div
               aria-hidden
-              className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/20 blur-3xl"
+              className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/20 blur-2xl"
             />
 
             <div className="relative">
@@ -226,7 +225,7 @@ const LandingPage = () => {
                   className="bg-[#0a0a0a] text-[#89E900] hover:bg-[#1a1a1a] shadow-lg shadow-black/40 font-semibold gap-2 px-8"
                 >
                   Start free
-                  <ArrowRightIcon size={16} />
+                  <ArrowRight size={16} />
                 </Button>
               </Link>
             </div>

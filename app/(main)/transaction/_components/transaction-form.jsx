@@ -3,8 +3,10 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar as CalendarIcon } from "iconsax-react";
-import { RefreshCWIcon } from "@/components/ui/refresh-cw";
+import {
+  Calendar as CalendarIcon,
+  RefreshCw as RefreshCWIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import useFetch from "@/hooks/use-fetch";

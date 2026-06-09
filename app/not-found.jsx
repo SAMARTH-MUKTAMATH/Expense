@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { HomeIcon } from "@/components/ui/home";
-import { ArrowLeftIcon } from "@/components/ui/arrow-left";
+import { Home as HomeIcon, ArrowLeft as ArrowLeftIcon } from "lucide-react";
 
 export default function NotFound() {
     return (

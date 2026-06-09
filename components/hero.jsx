@@ -3,18 +3,20 @@
 import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/ui/arrow-right";
-import { ArrowDownRightIcon } from "@/components/ui/arrow-down-right";
-import { ArrowUpRightIcon } from "@/components/ui/arrow-up-right";
-import { ShieldCheckIcon } from "@/components/ui/shield-check";
-import { SparklesIcon } from "@/components/ui/sparkles";
-import { WalletIcon } from "@/components/ui/wallet";
-import { ReceiptIcon } from "@/components/ui/receipt";
-import { ScanTextIcon } from "@/components/ui/scan-text";
-import { CircleCheckIcon } from "@/components/ui/circle-check";
-import { BellIcon } from "@/components/ui/bell";
-import { TrendingUpIcon } from "@/components/ui/trending-up";
-import { ChartPieIcon } from "@/components/ui/chart-pie";
+import { ArrowRight as ArrowRightIcon } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  ShieldCheck,
+  Sparkles,
+  Wallet,
+  Receipt,
+  ScanText,
+  CircleCheck,
+  Bell,
+  TrendingUp,
+  PieChart,
+} from "lucide-react";
 
 const HeroSection = () => {
     const imageRef = useRef(null);
@@ -34,11 +36,12 @@ const HeroSection = () => {
 
     return (
         <section className="relative pt-12 pb-16 px-4 overflow-hidden">
-            {/* Outer lime glow halos — bleed lime into the dark page bg around the panel corners */}
+            {/* Outer lime glow halos — kept static (no float anim) and at
+                blur-2xl to keep paint cost low; large blur-3xl + perpetual
+                transforms on multiple layers was the main lag source. */}
             <div aria-hidden className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
-                <div className="absolute top-0 left-1/4 h-[28rem] w-[28rem] rounded-full bg-[#89E900]/20 blur-3xl animate-float-slow" />
-                <div className="absolute top-1/3 right-0 h-[24rem] w-[24rem] rounded-full bg-[#89E900]/15 blur-3xl animate-float" />
-                <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-[#89E900]/12 blur-3xl" />
+                <div className="absolute top-0 left-1/4 h-[22rem] w-[22rem] rounded-full bg-[#89E900]/15 blur-2xl" />
+                <div className="absolute top-1/3 right-0 h-[18rem] w-[18rem] rounded-full bg-[#89E900]/12 blur-2xl" />
             </div>
 
             {/* Lime main bg panel — multi-stop gradient */}
@@ -54,11 +57,11 @@ const HeroSection = () => {
                 {/* inner corner gradients — darker pools at the corners for depth */}
                 <div
                     aria-hidden
-                    className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[#0a0a0a]/15 blur-3xl"
+                    className="absolute -top-32 -left-32 h-80 w-80 rounded-full bg-[#0a0a0a]/15 blur-2xl"
                 />
                 <div
                     aria-hidden
-                    className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-white/20 blur-3xl"
+                    className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-white/20 blur-2xl"
                 />
                 {/* lime-to-transparent inner fade at the top/bottom edges */}
                 <div
@@ -72,7 +75,7 @@ const HeroSection = () => {
 
                 <div className="relative px-6 sm:px-10 md:px-16 pt-16 md:pt-20 pb-20 text-center">
                     <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#0a0a0a] px-3 py-1 text-xs font-semibold text-[#89E900] shadow-md shadow-black/30 mb-8 animate-fade-up">
-                        <SparklesIcon size={14} />
+                        <Sparkles size={14} />
                         Smart finance, made for India
                     </div>
 
@@ -109,7 +112,7 @@ const HeroSection = () => {
                     </div>
 
                     <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[#0a0a0a]/70 animate-fade-up [animation-delay:280ms]">
-                        <ShieldCheckIcon size={14} />
+                        <ShieldCheck size={14} />
                         No credit card required · Secure bank-grade encryption
                     </div>
 
@@ -117,7 +120,7 @@ const HeroSection = () => {
                         <div ref={imageRef} className="hero-image relative">
                             <div
                                 aria-hidden
-                                className="absolute -inset-4 rounded-3xl bg-black/40 blur-3xl"
+                                className="absolute -inset-4 rounded-3xl bg-black/40 blur-2xl"
                             />
                             <DashboardPreview />
                         </div>
@@ -136,13 +139,13 @@ function DashboardPreview() {
                 <div className="rounded-2xl bg-[#161616] border border-white/10 shadow-2xl shadow-black/50 p-4 w-64 rotate-[-4deg] hover:rotate-0 transition-transform">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="h-9 w-9 rounded-xl bg-[#89E900] text-[#0a0a0a] flex items-center justify-center shadow-md shadow-[#89E900]/40 icon-glow">
-                            <ScanTextIcon size={16} className="icon-hover" />
+                            <ScanText size={16} className="icon-hover" />
                         </div>
                         <div className="flex-1">
                             <p className="text-xs font-semibold text-white">Receipt scanned</p>
                             <p className="text-[10px] text-gray-400">Gemini AI · 1.2s</p>
                         </div>
-                        <CircleCheckIcon size={16} className="text-emerald-400" />
+                        <CircleCheck size={16} className="text-emerald-400" />
                     </div>
                     <div className="space-y-1.5 rounded-lg bg-[#0a0a0a] border border-white/5 p-2.5">
                         <div className="flex justify-between text-[10px]">
@@ -169,7 +172,7 @@ function DashboardPreview() {
                 <div className="rounded-2xl bg-[#161616] border border-white/10 shadow-2xl shadow-black/50 p-4 w-72 rotate-[3deg] hover:rotate-0 transition-transform">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="h-9 w-9 rounded-xl bg-[#89E900] text-[#0a0a0a] flex items-center justify-center shadow-md shadow-[#89E900]/40 icon-glow">
-                            <SparklesIcon size={18} />
+                            <Sparkles size={18} />
                         </div>
                         <div>
                             <p className="text-xs font-semibold text-white">AI insight</p>
@@ -183,7 +186,7 @@ function DashboardPreview() {
                         Keep it up!
                     </p>
                     <div className="mt-3 flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-                        <TrendingUpIcon size={12} />
+                        <TrendingUp size={12} />
                         Trending in the right direction
                     </div>
                 </div>
@@ -193,7 +196,7 @@ function DashboardPreview() {
             <div className="hidden lg:flex absolute top-8 -right-2 z-20 animate-float-slow [animation-delay:1s]">
                 <div className="flex items-center gap-2 rounded-full bg-[#161616] border border-white/10 shadow-xl px-3 py-2 rotate-[4deg]">
                     <div className="h-6 w-6 rounded-full bg-amber-500/20 flex items-center justify-center">
-                        <BellIcon size={12} className="text-amber-400" />
+                        <Bell size={12} className="text-amber-400" />
                     </div>
                     <div className="text-left">
                         <p className="text-[10px] font-semibold leading-none text-white">
@@ -212,7 +215,7 @@ function DashboardPreview() {
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
                     <div className="mx-auto flex items-center gap-1.5 rounded-md bg-[#0a0a0a] border border-white/10 px-2.5 py-1 text-[10px] text-gray-400">
-                        <ShieldCheckIcon size={12} className="text-[#89E900]" />
+                        <ShieldCheck size={12} className="text-[#89E900]" />
                         budgetflow.app/dashboard
                     </div>
                 </div>
@@ -230,7 +233,7 @@ function DashboardPreview() {
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                             <div className="h-6 sm:h-7 px-2 sm:px-2.5 rounded-md bg-[#89E900] text-[#0a0a0a] text-[9px] sm:text-[10px] font-semibold flex items-center gap-1 shadow-md shadow-[#89E900]/30 whitespace-nowrap">
-                                <SparklesIcon size={12} />
+                                <Sparkles size={12} />
                                 Add transaction
                             </div>
                             {/* Avatar mock — hidden on mobile to avoid the lone green dot */}
@@ -247,7 +250,7 @@ function DashboardPreview() {
                         <div className="relative flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">
                                 <div className="h-9 w-9 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center shadow-md shadow-[#89E900]/30">
-                                    <ChartPieIcon size={18} />
+                                    <PieChart size={18} />
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-white">
@@ -284,7 +287,7 @@ function DashboardPreview() {
                             <div className="flex items-center justify-between mb-2 sm:mb-3">
                                 <div className="flex items-center gap-2">
                                     <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
-                                        <TrendingUpIcon size={12} />
+                                        <TrendingUp size={12} />
                                     </div>
                                     <p className="text-[11px] sm:text-xs font-semibold text-white">
                                         Transaction overview
@@ -347,7 +350,7 @@ function DashboardPreview() {
                         <div className="sm:col-span-2 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4">
                             <div className="flex items-center gap-2 mb-2 sm:mb-3">
                                 <div className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-[#89E900] text-[#0a0a0a] flex items-center justify-center">
-                                    <ReceiptIcon size={12} />
+                                    <Receipt size={12} />
                                 </div>
                                 <p className="text-[11px] sm:text-xs font-semibold text-white">Recent</p>
                             </div>
@@ -387,9 +390,9 @@ function DashboardPreview() {
                                             }`}
                                         >
                                             {t.type === "EXPENSE" ? (
-                                                <ArrowDownRightIcon size={14} />
+                                                <ArrowDownRight size={14} />
                                             ) : (
-                                                <ArrowUpRightIcon size={14} />
+                                                <ArrowUpRight size={14} />
                                             )}
                                         </div>
                                         <div className="min-w-0 flex-1">
@@ -449,7 +452,7 @@ function DashboardPreview() {
                                     <div
                                         className={`h-5 w-5 sm:h-7 sm:w-7 rounded-md sm:rounded-lg flex items-center justify-center ${a.bg} ${a.fg}`}
                                     >
-                                        <WalletIcon size={12} />
+                                        <Wallet size={12} />
                                     </div>
                                     {a.isDefault && (
                                         <>

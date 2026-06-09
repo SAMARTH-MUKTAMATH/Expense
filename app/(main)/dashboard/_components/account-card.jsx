@@ -1,9 +1,11 @@
 "use client";
 
-import { Star1 } from "iconsax-react";
-import { ArrowUpRightIcon } from "@/components/ui/arrow-up-right";
-import { ArrowDownRightIcon } from "@/components/ui/arrow-down-right";
-import { WalletIcon } from "@/components/ui/wallet";
+import {
+  Star as Star1,
+  ArrowUpRight as ArrowUpRightIcon,
+  ArrowDownRight as ArrowDownRightIcon,
+  Wallet as WalletIcon,
+} from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useEffect } from "react";
 import useFetch from "@/hooks/use-fetch";

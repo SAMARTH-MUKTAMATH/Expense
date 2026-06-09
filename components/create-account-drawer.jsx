@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RefreshCWIcon } from "@/components/ui/refresh-cw";
-import { WalletIcon } from "@/components/ui/wallet";
+import {
+  RefreshCw as RefreshCWIcon,
+  Wallet as WalletIcon,
+} from "lucide-react";
 import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
 

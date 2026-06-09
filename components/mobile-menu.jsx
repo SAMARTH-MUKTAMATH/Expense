@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Users } from "lucide-react";
+import { Menu, Users, LayoutGrid, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -10,8 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { LayoutGridIcon } from "@/components/ui/layout-grid";
-import { SparklesIcon } from "@/components/ui/sparkles";
 
 export function MobileMenu() {
   return (
@@ -32,7 +30,7 @@ export function MobileMenu() {
       >
         <DropdownMenuItem asChild className="focus:bg-white/5 cursor-pointer">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <LayoutGridIcon size={16} />
+            <LayoutGrid size={16} />
             Dashboard
           </Link>
         </DropdownMenuItem>
@@ -46,7 +44,7 @@ export function MobileMenu() {
         <DropdownMenuSeparator className="bg-white/10" />
         <DropdownMenuItem asChild className="focus:bg-white/5 cursor-pointer">
           <Link href="/advisor" className="flex items-center gap-2">
-            <SparklesIcon size={16} />
+            <Sparkles size={16} />
             Financial Advice
           </Link>
         </DropdownMenuItem>

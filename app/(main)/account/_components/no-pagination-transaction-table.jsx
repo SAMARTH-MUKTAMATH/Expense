@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { MoreHorizontal } from "lucide-react";
-import { ChevronDownIcon } from "@/components/ui/chevron-down";
-import { ChevronUpIcon } from "@/components/ui/chevron-up";
-import { SearchIcon } from "@/components/ui/search";
-import { XIcon } from "@/components/ui/x";
-import { RefreshCWIcon } from "@/components/ui/refresh-cw";
-import { ClockIcon } from "@/components/ui/clock";
-import { DeleteIcon } from "@/components/ui/delete";
+import {
+  ChevronDown as ChevronDownIcon,
+  ChevronUp as ChevronUpIcon,
+  Search as SearchIcon,
+  X as XIcon,
+  RefreshCw as RefreshCWIcon,
+  Clock as ClockIcon,
+  Trash2 as DeleteIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 

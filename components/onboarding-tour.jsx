@@ -4,14 +4,14 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useUser } from "@clerk/nextjs";
-import { SparklesIcon } from "@/components/ui/sparkles";
-import { WalletIcon } from "@/components/ui/wallet";
-import { SquarePenIcon } from "@/components/ui/square-pen";
-import { ChartPieIcon } from "@/components/ui/chart-pie";
-import { ScanTextIcon } from "@/components/ui/scan-text";
-import { ArrowLeftIcon } from "@/components/ui/arrow-left";
-import { ArrowRightIcon } from "@/components/ui/arrow-right";
 import {
+  Sparkles,
+  Wallet,
+  SquarePen,
+  PieChart,
+  ScanText,
+  ArrowLeft,
+  ArrowRight,
   Users,
   X,
   Lightbulb,
@@ -33,7 +33,7 @@ const SLIDES = [
     body: "Your AI-powered finance app, made for India. We'll walk you through everything in 45 seconds — no tutorials to read, no jargon.",
     tip: "You'll learn how to add accounts, log expenses, set budgets, split bills with friends, and get an AI-generated monthly report.",
     TipIcon: Lightbulb,
-    Icon: SparklesIcon,
+    Icon: Sparkles,
   },
   {
     accent: "Step 1 of 5",
@@ -41,7 +41,7 @@ const SLIDES = [
     body: "Each bank account, wallet, or UPI you use gets its own card. Set one as your default for one-tap transaction logging.",
     tip: "Example: HDFC Savings, Paytm Wallet, Axis Current — each tracked separately so you always know where your money is.",
     TipIcon: MapPin,
-    Icon: WalletIcon,
+    Icon: Wallet,
     cta: { href: "/dashboard", label: "Add an account" },
   },
   {
@@ -50,7 +50,7 @@ const SLIDES = [
     body: "Tap \"Add Transaction\" for income or expense — or snap a photo of any receipt. Our AI reads the amount, date, and category for you.",
     tip: "The receipt scanner works on physical bills, restaurant slips, even screenshots of UPI payments.",
     TipIcon: Camera,
-    Icon: ScanTextIcon,
+    Icon: ScanText,
     cta: { href: "/transaction/create", label: "Try adding one" },
   },
   {
@@ -59,7 +59,7 @@ const SLIDES = [
     body: "Tell us your spending cap for the month. We'll quietly track every expense and email you when you cross 75% — no nagging, just useful nudges.",
     tip: "Pro tip: Use the 50/30/20 rule — 50% needs, 30% wants, 20% savings. We'll help you stick to it.",
     TipIcon: Target,
-    Icon: ChartPieIcon,
+    Icon: PieChart,
     cta: { href: "/dashboard", label: "Set my budget" },
   },
   {
@@ -77,7 +77,7 @@ const SLIDES = [
     body: "Click \"Generate now\" once a month and our AI writes you a complete intelligence report — health score, forecasts, savings ideas, a 12-month plan.",
     tip: "The report arrives as a PDF in your inbox. You can also read it on the web with charts and tables.",
     TipIcon: FileText,
-    Icon: SparklesIcon,
+    Icon: Sparkles,
     cta: { href: "/advisor", label: "See it in action" },
   },
   {
@@ -86,7 +86,7 @@ const SLIDES = [
     body: "That's the whole tour. Anytime you need a refresher, click the (?) icon in the navbar.",
     tip: "Start by adding your first account. It takes 10 seconds.",
     TipIcon: Rocket,
-    Icon: SquarePenIcon,
+    Icon: SquarePen,
     cta: { href: "/dashboard", label: "Start using BudgetFLOW" },
   },
 ];
@@ -264,7 +264,7 @@ export function OnboardingTour() {
                 aria-label="Previous"
                 className="h-10 w-10 rounded-full flex items-center justify-center border border-white/15 bg-transparent text-white hover:bg-white/5 transition-colors disabled:opacity-20 disabled:cursor-not-allowed shrink-0"
               >
-                <ArrowLeftIcon size={18} />
+                <ArrowLeft size={18} />
               </button>
 
               <div className="flex-1 flex justify-center">
@@ -286,7 +286,7 @@ export function OnboardingTour() {
                   aria-label="Finish tour"
                   className="h-10 w-10 rounded-full flex items-center justify-center bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/40 hover:scale-105 transition-transform shrink-0"
                 >
-                  <SparklesIcon size={16} />
+                  <Sparkles size={16} />
                 </button>
               ) : (
                 <button
@@ -295,7 +295,7 @@ export function OnboardingTour() {
                   aria-label="Next"
                   className="h-10 w-10 rounded-full flex items-center justify-center bg-[#89E900] text-[#0a0a0a] shadow-md shadow-[#89E900]/40 hover:scale-105 transition-transform shrink-0"
                 >
-                  <ArrowRightIcon size={18} />
+                  <ArrowRight size={18} />
                 </button>
               )}
             </div>

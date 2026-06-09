@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { RefreshCWIcon } from "@/components/ui/refresh-cw";
-import { ScanTextIcon } from "@/components/ui/scan-text";
+import {
+  RefreshCw as RefreshCWIcon,
+  ScanText as ScanTextIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import useFetch from "@/hooks/use-fetch";

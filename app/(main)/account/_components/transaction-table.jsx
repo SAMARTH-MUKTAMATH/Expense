@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { More } from "iconsax-react";
-import { ArrowDownIcon } from "@/components/ui/arrow-down";
-import { ArrowUpIcon } from "@/components/ui/arrow-up";
-import { DeleteIcon } from "@/components/ui/delete";
-import { SearchIcon } from "@/components/ui/search";
-import { ArrowLeftIcon } from "@/components/ui/arrow-left";
-import { ArrowRightIcon } from "@/components/ui/arrow-right";
-import { RefreshCWIcon } from "@/components/ui/refresh-cw";
-import { ClockIcon } from "@/components/ui/clock";
+import {
+  MoreHorizontal as More,
+  ArrowDown as ArrowDownIcon,
+  ArrowUp as ArrowUpIcon,
+  Trash2 as DeleteIcon,
+  Search as SearchIcon,
+  ArrowLeft as ArrowLeftIcon,
+  ArrowRight as ArrowRightIcon,
+  RefreshCw as RefreshCWIcon,
+  Clock as ClockIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 

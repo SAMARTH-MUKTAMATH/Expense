@@ -9,11 +9,18 @@ import Lenis from "lenis";
  */
 export function SmoothScroll() {
   useEffect(() => {
+    // Respect users who'd rather have native scroll (laptop trackpads in
+    // particular hate smooth-scroll libraries) and anyone with prefers-
+    // reduced-motion. Skip Lenis entirely on touch devices too — native
+    // scroll there is already buttery and Lenis adds perceived input lag.
+    if (typeof window === "undefined") return;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isTouch || reducedMotion) return;
+
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 0.9, // snappier than the previous 1.1
       smoothWheel: true,
-      // Don't smooth touch — iOS/Android scroll is already smooth and
-      // smoothing it again feels laggy on mobile.
       smoothTouch: false,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });

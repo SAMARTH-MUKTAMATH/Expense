@@ -1,0 +1,36 @@
+/**
+ * Next 16 file-based PWA manifest. Auto-served at /manifest.webmanifest
+ * and the framework injects the <link rel="manifest"> tag for us.
+ *
+ * Updating any field here triggers a re-issue at request time — no rebuild
+ * required.
+ */
+export default function manifest() {
+  return {
+    name: "BudgetFLOW — AI-powered finance for India",
+    short_name: "BudgetFLOW",
+    description:
+      "Your AI-powered finance companion. Track every rupee, smarter.",
+    start_url: "/dashboard",
+    scope: "/",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#0a0a0a",
+    theme_color: "#89E900",
+    icons: [
+      {
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any maskable",
+      },
+      {
+        src: "/icon",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable",
+      },
+    ],
+    categories: ["finance", "productivity", "lifestyle"],
+  };
+}
