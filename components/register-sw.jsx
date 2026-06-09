@@ -10,6 +10,9 @@ import { useEffect } from "react";
 export function RegisterSW() {
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Skip in dev — the SW intercepts Next's HMR fetches and breaks hot reload.
+    // It's only needed in production (PWA install criteria + Web Push delivery).
+    if (process.env.NODE_ENV !== "production") return;
     if (!("serviceWorker" in navigator)) return;
 
     const register = () => {
