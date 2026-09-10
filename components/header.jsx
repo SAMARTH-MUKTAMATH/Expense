@@ -7,14 +7,26 @@ import {
   LayoutGrid,
   Users,
   HandCoins,
+  Settings,
+  BellDot,
 } from "lucide-react";
 import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
+import { db } from "@/lib/prisma";
 import { MobileMenu } from "@/components/mobile-menu";
 import { HelpButton } from "@/components/help-button";
 
 const Header = async () => {
-    await checkUser();
+    const user = await checkUser();
+
+    let reviewCount = 0;
+    try {
+        if (user) {
+            reviewCount = await db.transaction.count({
+                where: { userId: user.id, needsReview: true },
+            });
+        }
+    } catch {}
 
     return (
         <header className="fixed top-0 w-full z-50">
@@ -95,6 +107,37 @@ const Header = async () => {
                                 >
                                     <Sparkles size={18} />
                                     <span className="hidden sm:inline">Financial Advice</span>
+                                </Button>
+                            </Link>
+
+                            {/* Only rendered when there is something to review,
+                                so it reads as a notification rather than
+                                permanent furniture. */}
+                            {reviewCount > 0 && (
+                                <Link href="/review" className="inline-flex">
+                                    <Button
+                                        variant="outline"
+                                        className="group gap-2 border-amber-400/40 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20 hover:text-amber-100"
+                                    >
+                                        <BellDot size={18} />
+                                        <span className="hidden sm:inline">Review</span>
+                                        <span className="rounded-full bg-amber-400/25 px-2 text-xs font-semibold">
+                                            {reviewCount}
+                                        </span>
+                                    </Button>
+                                </Link>
+                            )}
+
+                            {/* Icon only: low-frequency page, and the nav is
+                                already carrying three labelled buttons. */}
+                            <Link href="/settings" className="hidden sm:inline-flex">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    aria-label="Settings"
+                                    className="bg-transparent border-white/15 text-white hover:bg-white/5 hover:text-white"
+                                >
+                                    <Settings size={18} />
                                 </Button>
                             </Link>
 

@@ -29,8 +29,6 @@ export const metadata = {
   description:
     "Track every rupee, scan receipts with AI, set monthly budgets, and get personalised financial insights — all in one beautiful dashboard.",
   applicationName: "BudgetFLOW",
-  // iOS Safari treats this as a "real" web app — full-screen, no browser
-  // chrome, dark translucent status bar to match the app background.
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -38,7 +36,6 @@ export const metadata = {
   },
 };
 
-// In Next 16 the viewport / themeColor fields must be in their own export.
 export const viewport = {
   themeColor: "#0a0a0a",
   width: "device-width",

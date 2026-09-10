@@ -3,14 +3,6 @@
 import { BrevoClient } from "@getbrevo/brevo";
 import { render } from "@react-email/render";
 
-/**
- * Send a transactional email via Brevo.
- *
- * Required env vars:
- *   BREVO_API_KEY        - xkeysib-... from brevo.com → SMTP & API → API Keys
- *   BREVO_SENDER_EMAIL   - a sender email verified in Brevo
- *   BREVO_SENDER_NAME    - display name shown in the From field
- */
 export async function sendEmail({ to, subject, react, attachments }) {
     if (!process.env.BREVO_API_KEY) {
         const error = new Error("BREVO_API_KEY is not set");
@@ -37,7 +29,6 @@ export async function sendEmail({ to, subject, react, attachments }) {
             htmlContent,
         };
 
-        // Brevo expects `attachment: [{ name, content }]` where `content` is base64.
         if (Array.isArray(attachments) && attachments.length > 0) {
             message.attachment = attachments.map((a) => ({
                 name: a.filename,

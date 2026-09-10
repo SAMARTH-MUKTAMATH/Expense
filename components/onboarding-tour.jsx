@@ -113,9 +113,7 @@ export function OnboardingTour() {
     if (!isLoaded || !isSignedIn) return;
     try {
       if (!window.localStorage.getItem(FLAG)) setOpen(true);
-    } catch {
-      /* private mode etc — just don't show */
-    }
+    } catch {}
   }, [isLoaded, isSignedIn]);
 
   useEffect(() => {
@@ -132,9 +130,7 @@ export function OnboardingTour() {
     setOpen(false);
     try {
       window.localStorage.setItem(FLAG, "1");
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   };
 
   const next = () => setIndex((i) => Math.min(SLIDES.length - 1, i + 1));

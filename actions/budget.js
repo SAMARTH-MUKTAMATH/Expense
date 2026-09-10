@@ -15,7 +15,6 @@ export async function getCurrentBudget(accountId) {
             },
         });
 
-        // Get current month's expenses
         const currentDate = new Date();
         const startOfMonth = new Date(
             currentDate.getFullYear(),
@@ -60,7 +59,6 @@ export async function updateBudget(amount) {
         const user = await checkUser();
         if (!user) throw new Error("Unauthorized");
 
-        // Update or create budget
         const budget = await db.budget.upsert({
             where: {
                 userId: user.id,

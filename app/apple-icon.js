@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-// iOS home-screen icon (180×180). Same dark+lime-bordered design as /icon.
-
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 

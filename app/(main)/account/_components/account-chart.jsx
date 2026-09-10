@@ -92,8 +92,6 @@ export function AccountChart({ transactions }) {
     };
   }, [transactions, dateRange]);
 
-  // Line chart needs ≥2 points to render an actual line. If only one day has
-  // data, prepend/append zero days so the single point renders as a spike.
   const lineData = useMemo(() => {
     if (filteredData.length === 0) return filteredData;
     if (filteredData.length >= 2) return filteredData;

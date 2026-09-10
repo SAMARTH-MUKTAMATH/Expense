@@ -82,7 +82,6 @@ export async function GET(request) {
     orderBy: { date: "asc" },
   });
 
-  // Decimals need converting before serialization to the PDF renderer.
   const txns = transactions.map((t) => ({
     id: t.id,
     type: t.type,

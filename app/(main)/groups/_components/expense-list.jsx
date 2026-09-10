@@ -38,7 +38,6 @@ export function ExpenseList({ group }) {
     1,
     Math.ceil((group.expenses?.length ?? 0) / PAGE_SIZE)
   );
-  // Clamp page if expenses count changed (e.g. after delete)
   const currentPage = Math.min(page, totalPages);
 
   const pageExpenses = useMemo(() => {

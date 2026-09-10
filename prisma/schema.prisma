@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,7 +8,7 @@ datasource db {
 
 model User {
   id            String    @id @default(uuid())
-  clerkUserId   String    @unique // clerk user id
+  clerkUserId   String    @unique
   email         String    @unique
   name          String?
   imageUrl      String?
@@ -23,6 +17,11 @@ model User {
   budgets       Budget[]
   createdGroups Group[]   @relation("CreatedGroups")
   financialReports FinancialReport[]
+
+  ingestTokenHash  String?   @unique // SHA-256 hash only, never the raw token
+  ingestTokenSetAt DateTime?
+  ingestLastSeenAt DateTime?
+
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -33,7 +32,7 @@ model Account {
   id           String        @id @default(uuid())
   name         String
   type         AccountType
-  balance      Decimal       @default(0) // will ask inital balance while creating an account
+  balance      Decimal       @default(0)
   isDefault    Boolean       @default(false)
   userId       String
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -54,19 +53,29 @@ model Transaction {
   category         String           
   receiptUrl       String?
   isRecurring      Boolean           @default(false)
-  recurringInterval RecurringInterval? // Only used if isRecurring is true
-  nextRecurringDate DateTime?         // Next date for recurring transaction
-  lastProcessed    DateTime?         // Last time this recurring transaction was processed
+  recurringInterval RecurringInterval? // only used when isRecurring
+  nextRecurringDate DateTime?
+  lastProcessed    DateTime?
   status           TransactionStatus  @default(COMPLETED)
   userId           String
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountId        String
   account          Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  source           TransactionSource @default(MANUAL)
+  referenceId      String? // UPI RRN / bank reference; the dedupe key
+  rawMessage       String?  @db.Text
+  merchantName     String?
+  parseConfidence  Float? // 0..1, NULL for manual rows
+  needsReview      Boolean  @default(false)
+
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
+  @@unique([userId, referenceId])
   @@index([userId])
   @@index([accountId])
+  @@index([userId, needsReview])
   @@map("transactions")
 }
 
@@ -74,7 +83,7 @@ model Transaction {
 model Budget {
   id          String       @id @default(uuid())
   amount      Decimal
-  lastAlertSent DateTime?  // Track when the last alert was sent
+  lastAlertSent DateTime?
   userId      String       @unique
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime     @default(now())
@@ -173,6 +182,12 @@ enum TransactionStatus {
   PENDING
   COMPLETED
   FAILED
+}
+
+enum TransactionSource {
+  MANUAL
+  SMS
+  RECEIPT
 }
 
 enum RecurringInterval {

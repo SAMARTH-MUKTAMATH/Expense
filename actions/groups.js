@@ -19,7 +19,6 @@ const serializeGroup = (group) => ({
     })),
 });
 
-// ---------- CREATE ----------
 export async function createGroup({ name, description, members }) {
     const user = await checkUser();
     if (!user) throw new Error("Unauthorized");
@@ -49,7 +48,6 @@ export async function createGroup({ name, description, members }) {
     return { success: true, data: group };
 }
 
-// ---------- READ ----------
 export async function getUserGroups() {
     const user = await checkUser();
     if (!user) throw new Error("Unauthorized");
@@ -86,7 +84,6 @@ export async function getGroup(id) {
     return serializeGroup(group);
 }
 
-// ---------- MEMBERS ----------
 export async function addGroupMember(groupId, { name, email }) {
     const user = await checkUser();
     if (!user) throw new Error("Unauthorized");
@@ -139,7 +136,6 @@ export async function removeGroupMember(memberId) {
     return { success: true };
 }
 
-// ---------- EXPENSES ----------
 export async function addExpense({
     groupId,
     description,
@@ -161,7 +157,6 @@ export async function addExpense({
     if (!description?.trim()) throw new Error("Description is required");
     if (!paidByName?.trim()) throw new Error("Who paid?");
 
-    // Resolve who to split with — default = all members
     const memberIds =
         Array.isArray(splitWith) && splitWith.length > 0
             ? splitWith.filter((id) => group.members.some((m) => m.id === id))
@@ -171,7 +166,6 @@ export async function addExpense({
         throw new Error("No members to split with");
     }
 
-    // Equal split with rounding remainder absorbed by the last share
     const perShare = Math.floor((total / memberIds.length) * 100) / 100;
     const shares = memberIds.map((memberId, i) => ({
         memberId,
@@ -253,7 +247,6 @@ export async function unsettleShare(shareId) {
     return { success: true, data: serializeAmount(updated) };
 }
 
-// ---------- NOTIFY (download path; email later) ----------
 export async function getNotifyPayload(shareId) {
     const user = await checkUser();
     if (!user) throw new Error("Unauthorized");
@@ -294,7 +287,6 @@ export async function getNotifyPayload(shareId) {
     };
 }
 
-// ---------- NOTIFY BY EMAIL (Brevo) ----------
 const NOTIFY_THROTTLE_MS = 5 * 60 * 1000; // one email per share per 5 minutes
 
 export async function notifyMemberByEmail(shareId) {
@@ -383,7 +375,6 @@ function formatINRSubject(n) {
     }
 }
 
-// ---------- DELETE GROUP ----------
 export async function deleteGroup(groupId) {
     const user = await checkUser();
     if (!user) throw new Error("Unauthorized");

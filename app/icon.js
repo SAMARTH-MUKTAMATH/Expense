@@ -1,9 +1,5 @@
 import { ImageResponse } from "next/og";
 
-// Next 16 file convention: auto-served at /icon, framework auto-injects
-// <link rel="icon">. Design mirrors the website header: dark canvas, lime
-// bordered rounded square, HandCoins mark inside.
-
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 

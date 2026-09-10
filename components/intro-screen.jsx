@@ -4,16 +4,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "motion/react";
 import { HandCoins } from "lucide-react";
 
-// Persisted across refreshes / future visits — bump the version suffix if
-// the intro design changes and we want returning users to see it once more.
 const SEEN_FLAG = "bf_intro_seen_v1";
 
-// Tighter timeline than the previous version. We avoid the custom animated
-// HandCoinsIcon (which ran its own framer animations on top of our scale
-// transform — every frame was doubled work) and use the static lucide SVG so
-// scaling stays crisp. We also start the icon at a larger size so the max
-// scale factor is small — big scale factors are what made the icon look
-// pixelated / blurry on mid-range devices.
 export default function IntroScreen() {
   const [show, setShow] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -23,21 +15,13 @@ export default function IntroScreen() {
     setMounted(true);
     if (typeof window === "undefined") return;
 
-    // Only play the intro on the very first visit. localStorage persists
-    // across refreshes AND across future browser sessions, so returning
-    // users skip straight to the app.
     try {
       if (window.localStorage.getItem(SEEN_FLAG)) return;
-      // Mark seen IMMEDIATELY (not on completion) so any refresh during
-      // the 4-second animation also skips it next time.
       window.localStorage.setItem(SEEN_FLAG, "1");
-    } catch {
-      /* private mode etc — just fall through and play the intro */
-    }
+    } catch {}
 
     setShow(true);
 
-    // Wordmark slides in once the icon has settled to its final size (~1.5s).
     const tWord = setTimeout(() => setShowWordmark(true), 1500);
     const tExit = setTimeout(() => setShow(false), 4200);
     return () => {
@@ -83,10 +67,6 @@ export default function IntroScreen() {
                   opacity: [0, 1, 1, 1],
                 }}
                 transition={{
-                  // 1.6s total — clean drop, hold, settle.
-                  //   0.0–0.35s  drop + grow
-                  //   0.35–0.7s  hold big
-                  //   0.7–1.0s   settle to final size
                   duration: 1.6,
                   times: [0, 0.35, 0.7, 1],
                   ease: [0.22, 1, 0.36, 1],

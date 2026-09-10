@@ -5,18 +5,6 @@ import { Download, Share, X } from "lucide-react";
 
 const DISMISS_FLAG = "bf_pwa_hint_dismissed_v1";
 
-/**
- * Install-to-home-screen hint.
- *
- *   Android Chrome → captures the `beforeinstallprompt` event and shows a
- *     small lime "Install app" pill bottom-right. Tapping triggers the
- *     native install dialog.
- *   iOS Safari    → no automatic prompt exists; show a one-time slide-up
- *     instruction "Tap Share → Add to Home Screen".
- *   Already-installed (running standalone) → render nothing.
- *
- * Dismiss state persists in localStorage so we don't nag the user.
- */
 export function InstallPwaHint() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showIosHint, setShowIosHint] = useState(false);
@@ -25,30 +13,22 @@ export function InstallPwaHint() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Skip entirely if the app is already installed/running as a PWA.
     const isStandalone =
       window.matchMedia?.("(display-mode: standalone)").matches ||
       window.navigator.standalone === true;
     if (isStandalone) return;
 
-    // Honour any prior dismissal.
     try {
       if (window.localStorage.getItem(DISMISS_FLAG)) return;
-    } catch {
-      /* localStorage blocked — fall through and show the hint */
-    }
+    } catch {}
     setDismissed(false);
 
-    // Android / desktop Chromium-based browsers fire this when installable.
     const onBeforeInstall = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
 
-    // iOS Safari heuristic — no UA sniffing for "Safari" specifically because
-    // iOS Chrome/Edge actually run under iOS Safari's WebKit and the install
-    // flow is identical.
     const ua = window.navigator.userAgent;
     const isIos = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
     if (isIos) setShowIosHint(true);
@@ -63,9 +43,7 @@ export function InstallPwaHint() {
     setShowIosHint(false);
     try {
       window.localStorage.setItem(DISMISS_FLAG, "1");
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   };
 
   const triggerInstall = async () => {
@@ -73,15 +51,12 @@ export function InstallPwaHint() {
     deferredPrompt.prompt();
     try {
       await deferredPrompt.userChoice;
-    } catch {
-      /* user dismissed */
-    }
+    } catch {}
     dismiss();
   };
 
   if (dismissed) return null;
 
-  // Android / Chromium — small lime pill bottom-right.
   if (deferredPrompt) {
     return (
       <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-brand text-ink shadow-lg shadow-brand/40 pl-3 pr-2 py-2 text-sm font-semibold animate-[fade-up_0.4s_ease-out]">
@@ -105,7 +80,6 @@ export function InstallPwaHint() {
     );
   }
 
-  // iOS — slide-up instruction card, bottom-center.
   if (showIosHint) {
     return (
       <div className="fixed bottom-4 inset-x-3 z-50 flex items-start gap-3 rounded-2xl border border-white/10 bg-[#161616] shadow-2xl shadow-black/60 p-4 animate-[fade-up_0.5s_ease-out] max-w-md mx-auto">

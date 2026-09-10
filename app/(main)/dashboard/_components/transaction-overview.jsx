@@ -56,8 +56,6 @@ const DATE_RANGES = [
   { value: "month", label: "This month" },
 ];
 
-// Returns an inclusive [start, end] (both Date objects) for the selected range.
-// `null` start means no lower bound (all-time).
 function getRangeBounds(range) {
   const now = new Date();
   const endOfToday = new Date(now);
@@ -121,10 +119,6 @@ export function DashboardOverview({ accounts, transactions }) {
 
   const selectedAccount = accounts.find((a) => a.id === selectedAccountId);
 
-  // Export as PDF — the heavy lifting (Prisma fetch + @react-pdf render)
-  // happens server-side at /api/dashboard/transactions-pdf. The browser
-  // navigates there and the response triggers a file download via the
-  // Content-Disposition: attachment header.
   const handleExport = (rangeValue) => {
     if (!selectedAccountId) {
       toast.error("Pick an account first.");
@@ -135,7 +129,6 @@ export function DashboardOverview({ accounts, transactions }) {
       selectedAccountId
     )}&range=${encodeURIComponent(rangeValue)}`;
 
-    // Use an off-DOM <a> so we don't navigate the current page away.
     const a = document.createElement("a");
     a.href = url;
     a.target = "_blank";
@@ -335,9 +328,6 @@ export function DashboardOverview({ accounts, transactions }) {
                       outerRadius="80%"
                       paddingAngle={2}
                       dataKey="value"
-                      // Only label slices >= 8% so small categories don't
-                      // overlap each other on mobile. Everything else lives
-                      // in the legend grid below.
                       label={({ name, percent }) =>
                         percent >= 0.08
                           ? `${(percent * 100).toFixed(0)}%`

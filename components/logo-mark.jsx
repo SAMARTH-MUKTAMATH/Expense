@@ -1,12 +1,3 @@
-/**
- * BudgetFLOW brand mark.
- *
- * Three ascending bars with rounded tops — represents budget growth /
- * upward trajectory. Reads instantly as a chart, scales cleanly from
- * 16px favicon to 200px hero. Uses currentColor for theme adaptability.
- *
- * Pass `className` to control color and `size` to control pixel size.
- */
 export function LogoMark({ size = 24, className }) {
   return (
     <svg

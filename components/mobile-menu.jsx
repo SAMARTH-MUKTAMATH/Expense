@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Users, LayoutGrid, Sparkles } from "lucide-react";
+import { Menu, Users, LayoutGrid, Sparkles, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -46,6 +46,13 @@ export function MobileMenu() {
           <Link href="/advisor" className="flex items-center gap-2">
             <Sparkles size={16} />
             Financial Advice
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="bg-white/10" />
+        <DropdownMenuItem asChild className="focus:bg-white/5 cursor-pointer">
+          <Link href="/settings" className="flex items-center gap-2">
+            <Settings size={16} />
+            Settings
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>

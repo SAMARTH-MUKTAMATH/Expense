@@ -7,13 +7,6 @@ import { revalidatePath } from "next/cache";
 
 const RATE_LIMIT_HOURS = 24;
 
-/**
- * Fire an Inngest event asking the advisor worker to generate a report for the
- * current user. Rate-limited to one report per user per 24h to keep AI costs
- * sane. deliveryMode controls whether the PDF is also emailed.
- *
- * @param {"web" | "email"} deliveryMode
- */
 export async function requestAdvisorReport(deliveryMode = "web") {
   const user = await checkUser();
   if (!user) throw new Error("Unauthorized");
@@ -45,13 +38,6 @@ export async function requestAdvisorReport(deliveryMode = "web") {
   return { success: true, deliveryMode };
 }
 
-/**
- * Used by the front-end loader to poll for a freshly-generated report.
- * Returns the latest report row IF it was created after `sinceMs` (epoch ms),
- * otherwise null. The component polls until non-null then refreshes the page.
- *
- * @param {number} sinceMs — Date.now() captured at click time
- */
 export async function getReportNewerThan(sinceMs) {
   const user = await checkUser();
   if (!user) throw new Error("Unauthorized");

@@ -8,14 +8,13 @@ const isProtectedRoute = createRouteMatcher([
   "/transaction(.*)",
   "/advisor(.*)",
   "/groups(.*)",
+  "/settings(.*)",
+  "/review(.*)",
 ]);
 
-// Create Arcjet middleware
 const aj = arcjet({
   key: process.env.ARCJET_KEY,
-  // characteristics: ["userId"], // Track based on Clerk userId
   rules: [
-    // Shield protection for content and security
     shield({
       mode: "LIVE",
     }),
@@ -24,13 +23,11 @@ const aj = arcjet({
       allow: [
         "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
         "GO_HTTP", // For Inngest
-        // See the full list at https://arcjet.com/bot-list
       ],
     }),
   ],
 });
 
-// Create base Clerk middleware
 const clerk = clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
 
@@ -42,17 +39,21 @@ const clerk = clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
-// Chain middlewares - ArcJet runs first, then Clerk
-export default createMiddleware(aj, clerk);
+const protectedMiddleware = createMiddleware(aj, clerk);
+
+export default function middleware(req, event) {
+  // bridge posts with a bearer token; Arcjet blocks non-browsers
+  if (req.nextUrl.pathname.startsWith("/api/ingest")) {
+    return NextResponse.next();
+  }
+  return protectedMiddleware(req, event);
+}
 
 export const config = {
-  // Run on Node.js (not Edge). Clerk + Arcjet combined exceed Vercel's 1 MB
-  // Edge Function limit on the free tier; Node runtime has no such cap.
+  // Clerk + Arcjet exceed Vercel's 1MB Edge limit
   runtime: "nodejs",
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };

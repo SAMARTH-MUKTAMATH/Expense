@@ -15,8 +15,6 @@ import { Sparkles, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { requestAdvisorReport, getReportNewerThan } from "@/actions/advisor";
 
-// Hard ceiling on the loading state. If the Inngest run is still not done by
-// MAX_WAIT_MS we stop polling and show a "taking longer than usual" message.
 const MAX_WAIT_MS = 120_000;
 const POLL_INTERVAL_MS = 3_000;
 
@@ -47,10 +45,6 @@ export function GenerateButton() {
   const sinceMsRef = useRef(null); // server timestamp boundary for polling
   const router = useRouter();
 
-  // While pending, do two things in parallel:
-  //   1. Tick the progress UI every 200ms.
-  //   2. Poll the DB every POLL_INTERVAL_MS for a report newer than sinceMsRef.
-  // First report that lands wins — we refresh + clear pending.
   useEffect(() => {
     if (!pendingMode) return;
     startedAtRef.current = performance.now();
@@ -79,9 +73,7 @@ export function GenerateButton() {
           router.refresh();
           setPendingMode(null);
         }
-      } catch {
-        // Network blip — keep polling; surface only if MAX_WAIT trips.
-      }
+      } catch {}
     }, POLL_INTERVAL_MS);
 
     return () => {
@@ -94,8 +86,6 @@ export function GenerateButton() {
   const run = (deliveryMode) => {
     startTransition(async () => {
       try {
-        // Capture the boundary BEFORE the action runs so any report created
-        // by this exact request matches `createdAt > sinceMs`.
         sinceMsRef.current = Date.now();
         const res = await requestAdvisorReport(deliveryMode);
         if (res?.rateLimited) {
@@ -119,8 +109,6 @@ export function GenerateButton() {
   };
 
   const isPending = !!pendingMode;
-  // Progress bar caps at 95% while waiting so it never looks "done" before
-  // the report actually lands; only when the poll finds it do we unmount.
   const progressPct = stalled ? 100 : Math.min(95, (elapsedMs / 35_000) * 95);
   const statusText = stalled
     ? "Still working — this is taking longer than usual. We'll keep checking."
@@ -180,9 +168,6 @@ export function GenerateButton() {
   );
 }
 
-// Visual progress chips — pre-baked checkpoints we mark as "done" based on
-// elapsed time. Purely cosmetic to make the wait feel like real AI work
-// happening in stages, rather than a single dumb progress bar.
 const PIPELINE_STEPS = [
   { label: "Transactions", at: 0 },
   { label: "Budget", at: 5_000 },
