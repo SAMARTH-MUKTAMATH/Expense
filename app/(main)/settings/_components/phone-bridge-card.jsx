@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Copy, Check, Smartphone, RefreshCw, Trash2, TriangleAlert } from "lucide-react";
+import { Download, Smartphone, Link2, Trash2, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +14,7 @@ import {
 import { generateIngestToken, revokeIngestToken } from "@/actions/ingest-token";
 
 const STALE_AFTER_DAYS = 3;
+const APK_PATH = "/budgetflow.apk";
 
 function formatWhen(iso) {
   if (!iso) return null;
@@ -33,43 +34,35 @@ function isStale(iso) {
   return days > STALE_AFTER_DAYS;
 }
 
+function buildConnectLink(token, ingestUrl) {
+  return `paisa://connect?${new URLSearchParams({ token, api: ingestUrl })}`;
+}
+
 export function PhoneBridgeCard({ status, ingestUrl }) {
-  const [token, setToken] = useState(null);
-  const [copied, setCopied] = useState(null);
+  const [connectLink, setConnectLink] = useState(null);
   const [pending, startTransition] = useTransition();
 
-  const copy = async (value, label) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(label);
-      setTimeout(() => setCopied(null), 2000);
-    } catch {
-      toast.error("Could not copy. Select the text and copy manually.");
-    }
-  };
-
-  const onGenerate = () => {
+  const onConnect = () => {
     startTransition(async () => {
       try {
-        const { token: fresh } = await generateIngestToken();
-        setToken(fresh);
-        toast.success(
-          status.hasToken ? "New token created. The old one no longer works." : "Token created."
-        );
+        const { token } = await generateIngestToken();
+        const link = buildConnectLink(token, ingestUrl);
+        setConnectLink(link);
+        window.location.href = link;
       } catch (error) {
-        toast.error(error.message || "Could not create the token.");
+        toast.error(error.message || "Could not connect this phone.");
       }
     });
   };
 
-  const onRevoke = () => {
+  const onDisconnect = () => {
     startTransition(async () => {
       try {
         await revokeIngestToken();
-        setToken(null);
-        toast.success("Token revoked. Your phone can no longer post transactions.");
+        setConnectLink(null);
+        toast.success("Phone disconnected. It will stop logging messages.");
       } catch (error) {
-        toast.error(error.message || "Could not revoke the token.");
+        toast.error(error.message || "Could not disconnect.");
       }
     });
   };
@@ -82,21 +75,20 @@ export function PhoneBridgeCard({ status, ingestUrl }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
           <Smartphone size={20} className="text-brand" />
-          Connect your phone
+          Automatic tracking
         </CardTitle>
         <CardDescription className="text-white/60">
-          Forward bank SMS to paisa and transactions get logged automatically. The
-          token below is how your phone proves it is you.
+          Install the BudgetFLOW app on your Android phone once. After that every
+          bank SMS is logged the moment it arrives, even when the app is closed.
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* --- current state ------------------------------------------------ */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
           <span className="text-white/60">
             Status:{" "}
             <span className={status.hasToken ? "text-brand" : "text-white/80"}>
-              {status.hasToken ? "token active" : "not connected"}
+              {status.hasToken ? "connected" : "not connected"}
             </span>
           </span>
           {status.hasToken && (
@@ -112,105 +104,67 @@ export function PhoneBridgeCard({ status, ingestUrl }) {
         {status.hasToken && stale && (
           <p className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-200">
             <TriangleAlert size={16} className="mt-0.5 shrink-0" />
-            No messages for over {STALE_AFTER_DAYS} days. Android may have killed
-            the forwarder in the background. Check it is still running on your phone.
+            No messages for over {STALE_AFTER_DAYS} days. Open the app on your
+            phone and check it still says Connected.
           </p>
         )}
 
-        {/* --- the token, shown exactly once -------------------------------- */}
-        {token && (
-          <div className="space-y-2 rounded-lg border border-brand/40 bg-brand/5 p-4">
-            <p className="text-sm font-medium text-white">
-              Copy this now. It is not shown again.
+        <ol className="space-y-5">
+          <li className="space-y-2">
+            <p className="text-sm font-medium text-white">1. Install the app</p>
+            <p className="text-sm text-white/60">
+              Open this page on your Android phone and download it. If Android asks
+              to allow installs from your browser, allow it.
             </p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 break-all rounded bg-black/40 p-3 font-mono text-xs text-brand">
-                {token}
-              </code>
-              <Button
-                size="sm"
-                variant="outline"
-                className="shrink-0 border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
-                onClick={() => copy(token, "token")}
-              >
-                {copied === "token" ? <Check size={16} /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <p className="text-xs text-white/50">
-              Anyone holding this can add transactions to your account. Treat it
-              like a password. If it leaks, generate a new one to invalidate it.
-            </p>
-          </div>
-        )}
-
-        {/* --- actions ------------------------------------------------------ */}
-        <div className="flex flex-wrap gap-3">
-          <Button className="btn-primary gap-2" onClick={onGenerate} disabled={pending}>
-            <RefreshCw size={16} className={pending ? "animate-spin" : ""} />
-            {status.hasToken ? "Generate a new token" : "Generate token"}
-          </Button>
-          {status.hasToken && (
-            <Button
-              variant="outline"
-              className="gap-2 border-red-400/30 bg-transparent text-red-300 hover:bg-red-500/10 hover:text-red-200"
-              onClick={onRevoke}
-              disabled={pending}
-            >
-              <Trash2 size={16} />
-              Revoke
+            <Button asChild className="btn-primary gap-2">
+              <a href={APK_PATH} download>
+                <Download size={16} />
+                Download app
+              </a>
             </Button>
-          )}
-        </div>
+          </li>
 
-        {/* --- setup instructions ------------------------------------------- */}
-        <details className="rounded-lg border border-white/10 bg-black/20 p-4">
-          <summary className="cursor-pointer text-sm font-medium text-white">
-            How to set up forwarding on your phone
-          </summary>
-          <div className="mt-4 space-y-3 text-sm text-white/70">
-            <p>
-              Install MacroDroid from the Play Store. It is free and one macro is
-              all this needs.
+          <li className="space-y-2">
+            <p className="text-sm font-medium text-white">2. Connect it</p>
+            <p className="text-sm text-white/60">
+              Tap the button on the same phone. The app opens, asks for SMS access,
+              and that is it.
             </p>
-            <ol className="list-decimal space-y-2 pl-5">
-              <li>Create a macro with the trigger <strong>SMS Received</strong>.</li>
-              <li>
-                Filter the sender so it only fires for your bank, for example a
-                sender containing <code className="text-brand">UNIONB</code>.
-              </li>
-              <li>
-                Add the action <strong>HTTP Request</strong>, method POST, to this
-                address:
-              </li>
-            </ol>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 break-all rounded bg-black/40 p-2 font-mono text-xs text-brand">
-                {ingestUrl}
-              </code>
-              <Button
-                size="sm"
-                variant="outline"
-                className="shrink-0 border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
-                onClick={() => copy(ingestUrl, "url")}
-              >
-                {copied === "url" ? <Check size={16} /> : <Copy size={16} />}
+            <div className="flex flex-wrap gap-3">
+              <Button className="btn-primary gap-2" onClick={onConnect} disabled={pending}>
+                <Link2 size={16} />
+                {status.hasToken ? "Reconnect this phone" : "Connect this phone"}
               </Button>
+              {connectLink && (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="gap-2 border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
+                >
+                  <a href={connectLink}>Open the app</a>
+                </Button>
+              )}
             </div>
-            <p>Add two headers:</p>
-            <pre className="overflow-x-auto rounded bg-black/40 p-3 font-mono text-xs text-white/80">
-{`Authorization: Bearer <your token>
-Content-Type: application/json`}
-            </pre>
-            <p>And this request body, using MacroDroid&apos;s magic text:</p>
-            <pre className="overflow-x-auto rounded bg-black/40 p-3 font-mono text-xs text-white/80">
-{`{"sender":"[sms_sender]","body":"[sms_message]"}`}
-            </pre>
-            <p className="text-white/50">
-              Then pay one rupee to yourself over UPI. The transaction should
-              appear on your dashboard within a few seconds.
-            </p>
-          </div>
-        </details>
+            {connectLink && (
+              <p className="text-xs text-white/50">
+                If the app did not open, tap Open the app. Nothing happens on a
+                computer, this step needs the phone.
+              </p>
+            )}
+          </li>
+        </ol>
+
+        {status.hasToken && (
+          <Button
+            variant="outline"
+            className="gap-2 border-red-400/30 bg-transparent text-red-300 hover:bg-red-500/10 hover:text-red-200"
+            onClick={onDisconnect}
+            disabled={pending}
+          >
+            <Trash2 size={16} />
+            Disconnect phone
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

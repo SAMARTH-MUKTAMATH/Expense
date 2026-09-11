@@ -5,7 +5,14 @@ import { checkUser } from "@/lib/checkUser";
 import { inngest } from "@/lib/inngest/client";
 import { revalidatePath } from "next/cache";
 
-const RATE_LIMIT_HOURS = 24;
+const RATE_LIMIT_HOURS = resolveRateLimitHours();
+
+function resolveRateLimitHours() {
+  const raw = process.env.ADVISOR_RATE_LIMIT_HOURS;
+  if (raw === undefined || raw === "") return 24;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 24;
+}
 
 export async function requestAdvisorReport(deliveryMode = "web") {
   const user = await checkUser();
@@ -16,10 +23,13 @@ export async function requestAdvisorReport(deliveryMode = "web") {
   }
 
   const cutoff = new Date(Date.now() - RATE_LIMIT_HOURS * 60 * 60 * 1000);
-  const recent = await db.financialReport.findFirst({
-    where: { userId: user.id, createdAt: { gte: cutoff } },
-    orderBy: { createdAt: "desc" },
-  });
+  const recent =
+    RATE_LIMIT_HOURS > 0
+      ? await db.financialReport.findFirst({
+          where: { userId: user.id, createdAt: { gte: cutoff } },
+          orderBy: { createdAt: "desc" },
+        })
+      : null;
   if (recent) {
     return {
       success: false,

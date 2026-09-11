@@ -65,9 +65,8 @@ export function PasteSmsCard() {
           Paste a bank message
         </CardTitle>
         <CardDescription className="text-white/60">
-          Copy a message from your Messages app and paste it here. It gets read
-          and filed automatically. No setup, no app to install. This is the
-          simplest way to try it.
+          No app on this phone? Copy a bank message and paste it here to log it
+          by hand.
         </CardDescription>
       </CardHeader>
 
@@ -102,7 +101,6 @@ export function PasteSmsCard() {
           message is still read, just with slightly lower confidence.
         </p>
 
-        {/* --- outcome ------------------------------------------------------ */}
         {result?.status === "created" && (
           <div className="space-y-2 rounded-lg border border-brand/40 bg-brand/5 p-4">
             <p className="flex items-center gap-2 text-sm font-medium text-white">

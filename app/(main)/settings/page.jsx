@@ -29,11 +29,9 @@ export default async function SettingsPage() {
         </p>
       </header>
 
-      {/* Paste first: it needs no setup, so it is the way in. The phone bridge
-          below automates the same pipeline once the user wants that. */}
       <div className="max-w-3xl space-y-6">
-        <PasteSmsCard />
         <PhoneBridgeCard status={status} ingestUrl={ingestUrl} />
+        <PasteSmsCard />
       </div>
     </div>
   );
