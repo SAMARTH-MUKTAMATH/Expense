@@ -25,7 +25,6 @@ class ForwardSmsWorker(context: Context, params: WorkerParameters) : Worker(cont
     override fun doWork(): Result {
         val store = TokenStore(applicationContext)
         val token = store.token ?: return Result.failure()
-        val apiUrl = store.apiUrl ?: return Result.failure()
 
         val receivedAt = inputData.getLong(KEY_RECEIVED_AT, System.currentTimeMillis())
         val payload = JSONObject()
@@ -34,7 +33,7 @@ class ForwardSmsWorker(context: Context, params: WorkerParameters) : Worker(cont
             .put("receivedAt", Instant.ofEpochMilli(receivedAt).toString())
 
         return try {
-            val connection = (URL(apiUrl).openConnection() as HttpURLConnection).apply {
+            val connection = (URL(Site.ingestUrl).openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
                 connectTimeout = TIMEOUT_MS
                 readTimeout = TIMEOUT_MS

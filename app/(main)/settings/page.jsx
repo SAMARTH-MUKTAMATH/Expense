@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { getIngestStatus } from "@/actions/ingest-token";
 import { PhoneBridgeCard } from "./_components/phone-bridge-card";
 import { PasteSmsCard } from "./_components/paste-sms-card";
@@ -9,11 +8,6 @@ export const metadata = {
 
 export default async function SettingsPage() {
   const status = await getIngestStatus();
-
-  const headerList = await headers();
-  const host = headerList.get("host") ?? "localhost:3000";
-  const protocol = host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https";
-  const ingestUrl = `${protocol}://${host}/api/ingest/sms`;
 
   return (
     <div className="container mx-auto px-4 pb-16 pt-28">
@@ -30,7 +24,7 @@ export default async function SettingsPage() {
       </header>
 
       <div className="max-w-3xl space-y-6">
-        <PhoneBridgeCard status={status} ingestUrl={ingestUrl} />
+        <PhoneBridgeCard status={status} />
         <PasteSmsCard />
       </div>
     </div>

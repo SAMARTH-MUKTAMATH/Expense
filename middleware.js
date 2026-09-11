@@ -10,6 +10,7 @@ const isProtectedRoute = createRouteMatcher([
   "/groups(.*)",
   "/settings(.*)",
   "/review(.*)",
+  "/api/connect-phone(.*)",
 ]);
 
 const aj = arcjet({

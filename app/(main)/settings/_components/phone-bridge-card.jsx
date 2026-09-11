@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { toast } from "sonner";
-import { Download, Smartphone, Link2, Trash2, TriangleAlert } from "lucide-react";
+import { Download, Smartphone, Trash2, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { generateIngestToken, revokeIngestToken } from "@/actions/ingest-token";
+import { revokeIngestToken } from "@/actions/ingest-token";
 
 const STALE_AFTER_DAYS = 3;
 const APK_PATH = "/budgetflow.apk";
@@ -34,32 +34,13 @@ function isStale(iso) {
   return days > STALE_AFTER_DAYS;
 }
 
-function buildConnectLink(token, ingestUrl) {
-  return `paisa://connect?${new URLSearchParams({ token, api: ingestUrl })}`;
-}
-
-export function PhoneBridgeCard({ status, ingestUrl }) {
-  const [connectLink, setConnectLink] = useState(null);
+export function PhoneBridgeCard({ status }) {
   const [pending, startTransition] = useTransition();
-
-  const onConnect = () => {
-    startTransition(async () => {
-      try {
-        const { token } = await generateIngestToken();
-        const link = buildConnectLink(token, ingestUrl);
-        setConnectLink(link);
-        window.location.href = link;
-      } catch (error) {
-        toast.error(error.message || "Could not connect this phone.");
-      }
-    });
-  };
 
   const onDisconnect = () => {
     startTransition(async () => {
       try {
         await revokeIngestToken();
-        setConnectLink(null);
         toast.success("Phone disconnected. It will stop logging messages.");
       } catch (error) {
         toast.error(error.message || "Could not disconnect.");
@@ -105,7 +86,7 @@ export function PhoneBridgeCard({ status, ingestUrl }) {
           <p className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-200">
             <TriangleAlert size={16} className="mt-0.5 shrink-0" />
             No messages for over {STALE_AFTER_DAYS} days. Open the app on your
-            phone and check it still says Connected.
+            phone and check it still says Auto tracking is on.
           </p>
         )}
 
@@ -113,8 +94,8 @@ export function PhoneBridgeCard({ status, ingestUrl }) {
           <li className="space-y-2">
             <p className="text-sm font-medium text-white">1. Install the app</p>
             <p className="text-sm text-white/60">
-              Open this page on your Android phone and download it. If Android asks
-              to allow installs from your browser, allow it.
+              Download it on your Android phone and install it. If Android asks to
+              allow installs from your browser, allow it.
             </p>
             <Button asChild className="btn-primary gap-2">
               <a href={APK_PATH} download>
@@ -122,35 +103,18 @@ export function PhoneBridgeCard({ status, ingestUrl }) {
                 Download app
               </a>
             </Button>
+            <p className="text-xs text-white/40">
+              Blocked by Play Protect? That happens to SMS apps from outside the Play
+              Store. In Play Store, open Play Protect, turn off scanning, install, then
+              turn it back on.
+            </p>
           </li>
 
           <li className="space-y-2">
-            <p className="text-sm font-medium text-white">2. Connect it</p>
+            <p className="text-sm font-medium text-white">2. Tap Start auto tracking</p>
             <p className="text-sm text-white/60">
-              Tap the button on the same phone. The app opens, asks for SMS access,
-              and that is it.
+              Open the app, tap Start auto tracking and allow SMS access. That is all.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Button className="btn-primary gap-2" onClick={onConnect} disabled={pending}>
-                <Link2 size={16} />
-                {status.hasToken ? "Reconnect this phone" : "Connect this phone"}
-              </Button>
-              {connectLink && (
-                <Button
-                  asChild
-                  variant="outline"
-                  className="gap-2 border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
-                >
-                  <a href={connectLink}>Open the app</a>
-                </Button>
-              )}
-            </div>
-            {connectLink && (
-              <p className="text-xs text-white/50">
-                If the app did not open, tap Open the app. Nothing happens on a
-                computer, this step needs the phone.
-              </p>
-            )}
           </li>
         </ol>
 
