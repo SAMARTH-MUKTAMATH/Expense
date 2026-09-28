@@ -114,6 +114,12 @@ const TRANSACTIONS = [
     body: "Your Super Card 1001 debited for INR 250 on 1 Sep for UPI 6248ETX",
     expect: { amount: 250, type: "EXPENSE", merchant: null, referenceId: "6248ETX", accountLast4: "1001", bank: "UTKARSH", category: "other-expense" },
   },
+  {
+    name: "Utkarsh SuperCard helpline is not a merchant",
+    sender: "AD-UTKSPR-S",
+    body: "Dear Samarth, your SuperCard 101 debited for INR 320.00 on 26 Sep 06:35 PM for UPI - 66334550485. To dispute call 1800097986 - Utkarsh SFBL",
+    expect: { amount: 320, type: "EXPENSE", merchant: null, referenceId: "66334550485", accountLast4: "101", bank: "UTKARSH", category: "other-expense" },
+  },
 ];
 
 console.log("--- transactions that must parse ---");
@@ -188,6 +194,9 @@ console.log("\n--- sender guard ---");
 check("DLT sender accepted", isLikelyBankSender("VM-HDFCBK"), true);
 check("bare entity code accepted", isLikelyBankSender("HDFCBK"), true);
 check("route suffix accepted", isLikelyBankSender("VM-HDFCBK-S"), true);
+check("transactional suffix accepted", isLikelyBankSender("AD-UTKSPR-T"), true);
+check("promotional suffix rejected", isLikelyBankSender("VM-HDFCBK-P"), false);
+check("lowercase promotional rejected", isLikelyBankSender("vm-hdfcbk-p"), false);
 check("phone number rejected", isLikelyBankSender("+919876543210"), false);
 check("plain number rejected", isLikelyBankSender("9876543210"), false);
 check("empty rejected", isLikelyBankSender(""), false);

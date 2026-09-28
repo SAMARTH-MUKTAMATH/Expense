@@ -195,7 +195,17 @@ export function AddTransactionForm({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white">Account</label>
+          <div className="flex items-center justify-between gap-2">
+            <label className="text-sm font-medium text-white">Account</label>
+            <CreateAccountDrawer>
+              <button
+                type="button"
+                className="text-xs font-medium text-[#89E900] hover:underline"
+              >
+                + Create account
+              </button>
+            </CreateAccountDrawer>
+          </div>
           <Select
             onValueChange={(value) => setValue("accountId", value)}
             defaultValue={getValues("accountId")}
@@ -209,14 +219,6 @@ export function AddTransactionForm({
                   {account.name} ({formatINR(account.balance)})
                 </SelectItem>
               ))}
-              <CreateAccountDrawer>
-                <Button
-                  variant="ghost"
-                  className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none"
-                >
-                  + Create account
-                </Button>
-              </CreateAccountDrawer>
             </SelectContent>
           </Select>
           {errors.accountId && (

@@ -176,7 +176,7 @@ export function AddExpenseDrawer({ open, onOpenChange, group }) {
                     >
                       <span
                         className={
-                          "h-4 w-4 rounded border flex items-center justify-center text-[10px] font-bold " +
+                          "h-4 w-4 shrink-0 rounded border flex items-center justify-center text-[10px] font-bold " +
                           (checked
                             ? "border-brand bg-brand text-ink"
                             : "border-white/20 bg-transparent")

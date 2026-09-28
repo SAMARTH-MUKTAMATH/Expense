@@ -104,7 +104,7 @@ export function MembersList({ group }) {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-8 bg-ink border-white/15 text-white text-sm"
+            className="h-8 bg-ink border-white/15 text-white text-base md:text-sm"
             autoFocus
           />
           <Input
@@ -112,7 +112,7 @@ export function MembersList({ group }) {
             placeholder="email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-8 bg-ink border-white/15 text-white text-sm"
+            className="h-8 bg-ink border-white/15 text-white text-base md:text-sm"
           />
           <div className="flex gap-2">
             <Button

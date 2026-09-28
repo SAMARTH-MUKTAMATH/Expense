@@ -95,7 +95,7 @@ export function CreateGroupForm() {
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="grid grid-cols-[1fr_1fr_auto] gap-2 items-start"
+              className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2 items-start"
             >
               <div>
                 <Input

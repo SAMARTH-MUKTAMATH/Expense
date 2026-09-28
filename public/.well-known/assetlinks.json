@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.paisa.bridge",
+      "sha256_cert_fingerprints": [
+        "7D:00:B2:B5:29:EA:80:E6:35:38:4C:63:C8:05:3F:BE:BC:4A:2E:4B:DB:41:B1:01:30:41:54:3C:23:40:5A:46"
+      ]
+    }
+  }
+]

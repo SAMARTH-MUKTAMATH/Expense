@@ -150,7 +150,7 @@ export function OnboardingTour() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex overflow-y-auto overscroll-contain p-4 bg-black/75 backdrop-blur-md"
           onClick={close}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
@@ -162,7 +162,7 @@ export function OnboardingTour() {
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-3xl border border-white/10 bg-gradient-to-b from-[#141414] to-[#0a0a0a] shadow-2xl shadow-black/60 overflow-hidden"
+            className="relative m-auto w-full max-w-md rounded-3xl border border-white/10 bg-gradient-to-b from-[#141414] to-[#0a0a0a] shadow-2xl shadow-black/60 overflow-hidden"
           >
             {/* lime halos for depth */}
             <div
@@ -185,7 +185,7 @@ export function OnboardingTour() {
             </button>
 
             {/* Slide content */}
-            <div className="relative px-6 pt-10 pb-4 sm:px-8 sm:pt-12 min-h-[420px]">
+            <div className="relative px-6 pt-10 pb-4 sm:px-8 sm:pt-12 min-h-[360px] sm:min-h-[420px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={index}
@@ -268,7 +268,7 @@ export function OnboardingTour() {
                   <Link
                     href={slide.cta.href}
                     onClick={close}
-                    className="text-xs font-bold uppercase tracking-wider text-[#89E900] hover:underline whitespace-nowrap"
+                    className="text-center text-xs font-bold uppercase tracking-wider text-[#89E900] hover:underline"
                   >
                     {isLast ? slide.cta.label : `${slide.cta.label} →`}
                   </Link>

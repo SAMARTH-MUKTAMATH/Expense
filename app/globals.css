@@ -95,6 +95,11 @@
     @apply border-border outline-ring/50;
   }
 
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-background text-foreground;
     background-color: #0a0a0a;
@@ -317,6 +322,10 @@
   color: #e5e5e5;
   font-size: 14px;
   line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.advisor-prose pre {
+  overflow-x: auto;
 }
 .advisor-prose h1,
 .advisor-prose h2,

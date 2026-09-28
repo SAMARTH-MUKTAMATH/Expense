@@ -185,9 +185,9 @@ export function NoPaginationTransactionTable({ transactions }) {
             className="pl-8"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger>
+            <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent>

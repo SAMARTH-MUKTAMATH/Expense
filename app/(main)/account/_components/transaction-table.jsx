@@ -11,6 +11,7 @@ import {
   ArrowRight as ArrowRightIcon,
   RefreshCw as RefreshCWIcon,
   Clock as ClockIcon,
+  X,
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -208,7 +209,7 @@ export function TransactionTable({ transactions }) {
             className="pl-8"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Select
             value={typeFilter}
             onValueChange={(value) => {

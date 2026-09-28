@@ -25,11 +25,11 @@ export default async function AccountPage({ params }) {
           className="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-[#89E900]/20"
         />
         <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center bg-[#89E900] text-[#0a0a0a] shadow-lg shadow-[#89E900]/30">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="h-14 w-14 shrink-0 rounded-2xl flex items-center justify-center bg-[#89E900] text-[#0a0a0a] shadow-lg shadow-[#89E900]/30">
               <WalletIcon size={24} />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-wider text-[#89E900]">
                 {account.type.charAt(0) + account.type.slice(1).toLowerCase()}{" "}
                 account

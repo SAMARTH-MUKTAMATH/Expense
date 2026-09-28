@@ -6,6 +6,7 @@ import { BudgetProgress } from "./_components/budget-progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus as PlusIcon } from "lucide-react";
 import { DashboardOverview } from "./_components/transaction-overview";
+import { StartTrackingCard } from "@/components/start-tracking-card";
 
 export default async function DashboardPage() {
   const [accounts, transactions] = await Promise.all([
@@ -22,6 +23,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      <StartTrackingCard />
+
       <BudgetProgress
         initialBudget={budgetData?.budget}
         currentExpenses={budgetData?.currentExpenses || 0}

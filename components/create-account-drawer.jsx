@@ -95,7 +95,13 @@ export function CreateAccountDrawer({ children }) {
           </div>
         </DrawerHeader>
         <div className="px-6 pb-6 max-w-lg mx-auto w-full">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form
+            onSubmit={(event) => {
+              event.stopPropagation();
+              handleSubmit(onSubmit)(event);
+            }}
+            className="space-y-5"
+          >
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-white">
                 Account name

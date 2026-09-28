@@ -54,7 +54,7 @@ export function ExpenseList({ group }) {
           </div>
           <p className="text-sm text-gray-300">No expenses yet</p>
           <p className="text-xs text-gray-500 mt-1">
-            Tap "Add expense" to log your first shared bill.
+            Tap &quot;Add expense&quot; to log your first shared bill.
           </p>
         </CardContent>
       </Card>
@@ -126,11 +126,11 @@ function Pagination({ page, totalPages, totalItems, onChange }) {
   const to = Math.min(page * PAGE_SIZE, totalItems);
 
   return (
-    <div className="flex items-center justify-between gap-3 pt-2">
+    <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
       <p className="text-xs text-gray-500">
         Showing {from}–{to} of {totalItems}
       </p>
-      <div className="flex items-center gap-1">
+      <div className="flex flex-wrap items-center gap-1">
         <Button
           variant="ghost"
           size="icon"

@@ -7,4 +7,10 @@
         <item name="android:statusBarColor">@color/ink</item>
         <item name="android:navigationBarColor">@color/ink</item>
     </style>
+
+    <style name="BudgetFlow.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

@@ -9,15 +9,16 @@ import {
   testimonialsData,
 } from "@/data/landing";
 import HeroSection from "@/components/hero";
+import { GetAppBanner } from "@/components/get-app-banner";
 import Link from "next/link";
 import { Quote, Star, ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
+      <GetAppBanner />
       <HeroSection />
 
-      {/* Stats */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 surface-card p-8 md:p-10">
@@ -39,7 +40,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Features */}
       <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-14">
@@ -89,7 +89,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How it works */}
       <section id="how-it-works" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-14">
@@ -134,7 +133,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section id="testimonials" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-14">
@@ -157,7 +155,7 @@ const LandingPage = () => {
               >
                 <CardContent className="pt-6 space-y-4">
                   <Quote className="h-7 w-7 text-[#89E900]" />
-                  <p className="text-gray-300 leading-relaxed">"{t.quote}"</p>
+                  <p className="text-gray-300 leading-relaxed">&quot;{t.quote}&quot;</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-white/10">
                     <Image
                       src={t.image}
@@ -188,7 +186,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA - lime panel bookend */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div

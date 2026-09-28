@@ -43,8 +43,9 @@ const clerk = clerkMiddleware(async (auth, req) => {
 const protectedMiddleware = createMiddleware(aj, clerk);
 
 export default function middleware(req, event) {
-  // bridge posts with a bearer token; Arcjet blocks non-browsers
-  if (req.nextUrl.pathname.startsWith("/api/ingest")) {
+  // phone bridge and asset-link verifier are not browsers
+  const { pathname } = req.nextUrl;
+  if (pathname.startsWith("/api/ingest") || pathname.startsWith("/.well-known/")) {
     return NextResponse.next();
   }
   return protectedMiddleware(req, event);

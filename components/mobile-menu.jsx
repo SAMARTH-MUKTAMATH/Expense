@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Users, LayoutGrid, Sparkles, Settings } from "lucide-react";
+import { Menu, Users, LayoutGrid, Sparkles, Settings, HelpCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -54,6 +54,14 @@ export function MobileMenu() {
             <Settings size={16} />
             Settings
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="bg-white/10" />
+        <DropdownMenuItem
+          onSelect={() => window.dispatchEvent(new Event("bf:open-onboarding"))}
+          className="flex items-center gap-2 focus:bg-white/5 cursor-pointer"
+        >
+          <HelpCircle size={16} />
+          App tour
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

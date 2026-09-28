@@ -1,38 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Download, Share, X } from "lucide-react";
 
 const DISMISS_FLAG = "bf_pwa_hint_dismissed_v1";
 
+const subscribe = () => () => {};
+
+function getHintKind() {
+  const ua = window.navigator.userAgent;
+  const isStandalone =
+    window.matchMedia?.("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  // Android gets the native app instead of a second icon
+  if (isStandalone || /Android/i.test(ua)) return "none";
+  try {
+    if (window.localStorage.getItem(DISMISS_FLAG)) return "none";
+  } catch {}
+  return /iPad|iPhone|iPod/.test(ua) && !window.MSStream ? "ios" : "prompt";
+}
+
 export function InstallPwaHint() {
+  const hintKind = useSyncExternalStore(subscribe, getHintKind, () => "none");
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showIosHint, setShowIosHint] = useState(false);
-  const [dismissed, setDismissed] = useState(true); // assume dismissed until we know
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const isStandalone =
-      window.matchMedia?.("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true;
-    if (isStandalone) return;
-
-    try {
-      if (window.localStorage.getItem(DISMISS_FLAG)) return;
-    } catch {}
-    setDismissed(false);
-
+    const isAndroid = /Android/i.test(window.navigator.userAgent);
     const onBeforeInstall = (e) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      if (!isAndroid) setDeferredPrompt(e);
     };
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
-
-    const ua = window.navigator.userAgent;
-    const isIos = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    if (isIos) setShowIosHint(true);
-
     return () =>
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
   }, []);
@@ -40,7 +39,6 @@ export function InstallPwaHint() {
   const dismiss = () => {
     setDismissed(true);
     setDeferredPrompt(null);
-    setShowIosHint(false);
     try {
       window.localStorage.setItem(DISMISS_FLAG, "1");
     } catch {}
@@ -55,7 +53,7 @@ export function InstallPwaHint() {
     dismiss();
   };
 
-  if (dismissed) return null;
+  if (dismissed || hintKind === "none") return null;
 
   if (deferredPrompt) {
     return (
@@ -80,7 +78,7 @@ export function InstallPwaHint() {
     );
   }
 
-  if (showIosHint) {
+  if (hintKind === "ios") {
     return (
       <div className="fixed bottom-4 inset-x-3 z-50 flex items-start gap-3 rounded-2xl border border-white/10 bg-[#161616] shadow-2xl shadow-black/60 p-4 animate-[fade-up_0.5s_ease-out] max-w-md mx-auto">
         <div className="h-9 w-9 rounded-lg bg-brand text-ink flex items-center justify-center shrink-0 shadow-md shadow-brand/40">

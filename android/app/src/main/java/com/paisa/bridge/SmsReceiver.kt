@@ -18,6 +18,7 @@ private val SENDER_ID = Regex("^(?:[A-Z]{2}-)?[A-Z0-9]{4,9}(?:-[A-Z])?$")
 fun looksLikeBankSender(sender: String): Boolean {
     val raw = sender.trim().uppercase()
     if (raw.isEmpty() || PHONE_NUMBER.matches(raw)) return false
+    if (raw.endsWith("-P")) return false
     return SENDER_ID.matches(raw)
 }
 
