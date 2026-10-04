@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Zap, ShieldCheck, BellRing } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,8 @@ import { useAppShell } from "@/hooks/use-app-shell";
 
 const SNOOZE_KEY = "bf_tracking_prompt_snoozed_until";
 const SNOOZE_DAYS = 3;
+const FIRST_USED_KEY = "bf_first_used_at";
+const DELAY_MS = 2 * 60_000;
 
 const subscribe = () => () => {};
 
@@ -25,18 +27,39 @@ function isSnoozed() {
   }
 }
 
+function msUntilPromptDue() {
+  try {
+    let firstUsed = Number(window.localStorage.getItem(FIRST_USED_KEY));
+    if (!firstUsed) {
+      firstUsed = Date.now();
+      window.localStorage.setItem(FIRST_USED_KEY, String(firstUsed));
+    }
+    return Math.max(0, firstUsed + DELAY_MS - Date.now());
+  } catch {
+    return DELAY_MS;
+  }
+}
+
 const POINTS = [
   { Icon: Zap, text: "Bank payments are added the moment the SMS arrives." },
   { Icon: BellRing, text: "Works in the background, even when the app is closed." },
   { Icon: ShieldCheck, text: "Only bank messages are read. Personal chats never leave your phone." },
 ];
 
-export function TrackingPrompt({ hasTransactions }) {
+export function TrackingPrompt() {
   const { inApp, trackingOn } = useAppShell();
   const snoozed = useSyncExternalStore(subscribe, isSnoozed, () => true);
   const [closed, setClosed] = useState(false);
+  const [due, setDue] = useState(false);
+  const eligible = inApp && !trackingOn && !snoozed;
 
-  const open = inApp && !trackingOn && hasTransactions && !snoozed && !closed;
+  useEffect(() => {
+    if (!eligible) return;
+    const timer = setTimeout(() => setDue(true), msUntilPromptDue());
+    return () => clearTimeout(timer);
+  }, [eligible]);
+
+  const open = eligible && due && !closed;
 
   const snooze = () => {
     setClosed(true);
