@@ -1,4 +1,4 @@
-import { Inter, Space_Grotesk, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -12,15 +12,19 @@ import { Suspense } from "react";
 
 import { ClerkProvider } from "@clerk/nextjs";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const inter = localFont({
+  src: "./fonts/inter.woff2",
+  weight: "100 900",
+  variable: "--font-inter",
+});
+const spaceGrotesk = localFont({
+  src: "./fonts/space-grotesk.woff2",
+  weight: "300 700",
   variable: "--font-display",
 });
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+const outfit = localFont({
+  src: "./fonts/outfit.woff2",
+  weight: "100 900",
   variable: "--font-intro",
 });
 
