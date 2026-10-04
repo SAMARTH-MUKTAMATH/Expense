@@ -24,7 +24,7 @@ const LandingPage = () => {
           <div className="relative overflow-hidden rounded-3xl border border-white/10 surface-card p-8 md:p-10">
             <div
               aria-hidden
-              className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-[40rem] rounded-full bg-[#89E900]/10 blur-2xl"
+              className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-[40rem] rounded-full bg-[#89E900]/10 blur-2xl"
             />
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6">
               {statsData.map((stat, index) => (
@@ -66,11 +66,11 @@ const LandingPage = () => {
               >
                 <div
                   aria-hidden
-                  className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-[#89E900]/15 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 blur-2xl"
+                  className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-[#89E900]/15 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 blur-2xl"
                 />
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#89E900]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#89E900]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
                 />
                 <CardContent className="pt-6 space-y-3 relative">
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#b6f047] via-[#89E900] to-[#7AD100] text-[#0a0a0a] shadow-lg shadow-[#89E900]/40">
@@ -194,15 +194,15 @@ const LandingPage = () => {
           >
             <div
               aria-hidden
-              className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,10,10,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(10,10,10,0.08)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]"
+              className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(10,10,10,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(10,10,10,0.08)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]"
             />
             <div
               aria-hidden
-              className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#0a0a0a]/10 blur-2xl"
+              className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#0a0a0a]/10 blur-2xl"
             />
             <div
               aria-hidden
-              className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/20 blur-2xl"
+              className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/20 blur-2xl"
             />
 
             <div className="relative">

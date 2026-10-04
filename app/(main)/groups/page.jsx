@@ -70,7 +70,7 @@ function GroupCard({ group }) {
       <Card className="group relative overflow-hidden bg-ink-soft border-white/10 hover:border-brand/40 hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full">
         <div
           aria-hidden
-          className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-brand/10 blur-2xl group-hover:bg-brand/20 transition-colors"
+          className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full bg-brand/10 blur-2xl group-hover:bg-brand/20 transition-colors"
         />
         <CardContent className="pt-6 relative">
           <div className="flex items-start justify-between gap-3 mb-4">

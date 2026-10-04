@@ -141,7 +141,7 @@ function BackgroundGlow() {
   return (
     <motion.div
       aria-hidden
-      className="absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-2xl"
+      className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-2xl"
       initial={{ scale: 0.7, opacity: 0 }}
       animate={{ scale: 1, opacity: 0.5 }}
       transition={{ duration: 1.2, ease: "easeOut" }}

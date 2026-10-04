@@ -75,7 +75,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
     <Card className="relative overflow-hidden bg-ink-soft border-white/10">
       <div
         aria-hidden
-        className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-brand/15 blur-3xl"
+        className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 rounded-full bg-brand/15 blur-3xl"
       />
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">

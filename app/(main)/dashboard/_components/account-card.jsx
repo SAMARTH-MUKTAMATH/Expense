@@ -56,7 +56,7 @@ export function AccountCard({ account }) {
     <Card className="group relative overflow-hidden surface-card hover:border-[#89E900]/50 hover:-translate-y-1 transition-all duration-300">
       <div
         aria-hidden
-        className="absolute -top-16 -right-16 h-40 w-40 rounded-full blur-3xl opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500 bg-[#89E900]/50"
+        className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full blur-3xl opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500 bg-[#89E900]/50"
       />
       <Link href={`/account/${id}`}>
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2 relative">

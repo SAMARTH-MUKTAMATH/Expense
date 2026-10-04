@@ -185,7 +185,7 @@ function PendingCard({ mode, statusText, progressPct }) {
       {/* Pulsing halo */}
       <div
         aria-hidden
-        className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-brand/15 blur-3xl animate-pulse"
+        className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-brand/15 blur-3xl animate-pulse"
       />
 
       <div className="relative flex items-center gap-3 mb-4">
@@ -193,11 +193,11 @@ function PendingCard({ mode, statusText, progressPct }) {
         <div className="relative h-12 w-12 shrink-0 flex items-center justify-center">
           <div
             aria-hidden
-            className="absolute inset-0 rounded-full border border-brand/30 animate-[spin_4s_linear_infinite]"
+            className="pointer-events-none absolute inset-0 rounded-full border border-brand/30 animate-[spin_4s_linear_infinite]"
           />
           <div
             aria-hidden
-            className="absolute inset-1 rounded-full border border-brand/40 animate-[spin_3s_linear_infinite_reverse]"
+            className="pointer-events-none absolute inset-1 rounded-full border border-brand/40 animate-[spin_3s_linear_infinite_reverse]"
           />
           <div className="relative h-8 w-8 rounded-lg bg-brand text-ink flex items-center justify-center shadow-md shadow-brand/40">
             <Sparkles size={16} className="animate-pulse" />
@@ -225,7 +225,7 @@ function PendingCard({ mode, statusText, progressPct }) {
           {/* Sliding light streak inside the filled portion */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-[shimmer_1.6s_linear_infinite]"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-[shimmer_1.6s_linear_infinite]"
             style={{ backgroundSize: "200% 100%" }}
           />
         </div>

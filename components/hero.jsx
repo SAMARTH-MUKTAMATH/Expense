@@ -52,25 +52,25 @@ const HeroSection = () => {
                 {/* decorative grid */}
                 <div
                     aria-hidden
-                    className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
+                    className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
                 />
                 {/* inner corner gradients — darker pools at the corners for depth */}
                 <div
                     aria-hidden
-                    className="absolute -top-32 -left-32 h-80 w-80 rounded-full bg-[#0a0a0a]/15 blur-2xl"
+                    className="pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-[#0a0a0a]/15 blur-2xl"
                 />
                 <div
                     aria-hidden
-                    className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-white/20 blur-2xl"
+                    className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-white/20 blur-2xl"
                 />
                 {/* lime-to-transparent inner fade at the top/bottom edges */}
                 <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#a3ff19]/40 to-transparent"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#a3ff19]/40 to-transparent"
                 />
                 <div
                     aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#6BB300]/30 to-transparent"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#6BB300]/30 to-transparent"
                 />
 
                 <div className="relative px-6 sm:px-10 md:px-16 pt-16 md:pt-20 pb-20 text-center">
@@ -120,7 +120,7 @@ const HeroSection = () => {
                         <div ref={imageRef} className="hero-image relative">
                             <div
                                 aria-hidden
-                                className="absolute -inset-4 rounded-3xl bg-black/40 blur-2xl"
+                                className="pointer-events-none absolute -inset-4 rounded-3xl bg-black/40 blur-2xl"
                             />
                             <DashboardPreview />
                         </div>
@@ -245,7 +245,7 @@ function DashboardPreview() {
                     <div className="mb-3 sm:mb-4 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4 relative overflow-hidden">
                         <div
                             aria-hidden
-                            className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-[#89E900]/20 blur-2xl"
+                            className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full bg-[#89E900]/20 blur-2xl"
                         />
                         <div className="relative flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">

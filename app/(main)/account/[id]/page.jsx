@@ -22,7 +22,7 @@ export default async function AccountPage({ params }) {
       <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#161616] p-6 md:p-8">
         <div
           aria-hidden
-          className="absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-[#89E900]/20"
+          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl bg-[#89E900]/20"
         />
         <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="flex min-w-0 items-start gap-4">

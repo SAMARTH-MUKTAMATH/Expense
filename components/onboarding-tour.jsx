@@ -167,11 +167,11 @@ export function OnboardingTour() {
             {/* lime halos for depth */}
             <div
               aria-hidden
-              className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-[#89E900]/20 blur-3xl"
+              className="pointer-events-none absolute -top-32 -right-32 h-64 w-64 rounded-full bg-[#89E900]/20 blur-3xl"
             />
             <div
               aria-hidden
-              className="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-[#89E900]/10 blur-3xl"
+              className="pointer-events-none absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-[#89E900]/10 blur-3xl"
             />
 
             {/* Close (×) — replaces text "Skip" for cleaner visual */}
@@ -199,11 +199,11 @@ export function OnboardingTour() {
                   <div className="relative mx-auto mb-6 h-24 w-24 flex items-center justify-center">
                     <div
                       aria-hidden
-                      className="absolute inset-0 rounded-full bg-[#89E900]/15 blur-2xl"
+                      className="pointer-events-none absolute inset-0 rounded-full bg-[#89E900]/15 blur-2xl"
                     />
                     <div
                       aria-hidden
-                      className="absolute inset-2 rounded-full bg-[#89E900]/10"
+                      className="pointer-events-none absolute inset-2 rounded-full bg-[#89E900]/10"
                     />
                     <div className="relative h-20 w-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#b6f047] via-[#89E900] to-[#7AD100] text-[#0a0a0a] shadow-xl shadow-[#89E900]/40">
                       <Icon size={36} />
