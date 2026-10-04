@@ -14,7 +14,7 @@ android {
         applicationId = "com.paisa.bridge"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
+        versionCode = 4
         versionName = "1.2"
         buildConfigField("String", "SITE_URL", "\"$siteUrl\"")
         manifestPlaceholders["siteUrl"] = siteUrl
