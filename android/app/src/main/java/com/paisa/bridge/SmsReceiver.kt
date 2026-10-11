@@ -26,15 +26,14 @@ class SmsReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
         if (!TokenStore(context).isConnected) return
+        scheduleInboxSync(context)
 
         val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         if (messages.isNullOrEmpty()) return
 
         val sender = messages[0].originatingAddress ?: return
-        if (!looksLikeBankSender(sender)) return
-
         val body = messages.joinToString("") { it.messageBody ?: "" }
-        if (body.isBlank()) return
+        if (!shouldForward(sender, body)) return
 
         val input = Data.Builder()
             .putString(ForwardSmsWorker.KEY_SENDER, sender)

@@ -1,6 +1,5 @@
 package com.paisa.bridge
 
-import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -66,7 +65,7 @@ class TrackingActivity : Activity() {
                     "Messages from people are ignored and never leave your phone."
             )
             .setPositiveButton("Continue") { _, _ ->
-                requestPermissions(arrayOf(Manifest.permission.RECEIVE_SMS), SMS_PERMISSION_REQUEST)
+                requestPermissions(SMS_PERMISSIONS, SMS_PERMISSION_REQUEST)
             }
             .setNegativeButton("Not now") { _, _ -> finish() }
             .setOnCancelListener { finish() }
@@ -80,7 +79,7 @@ class TrackingActivity : Activity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode != SMS_PERMISSION_REQUEST) return
-        if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             signIn()
         } else {
             showPermissionBlocked()
@@ -122,6 +121,8 @@ class TrackingActivity : Activity() {
         }
         store.token = token
         store.pendingState = null
+        if (store.inboxSyncedUntil == null) store.inboxSyncedUntil = System.currentTimeMillis()
+        scheduleInboxSync(this)
         openInApp(Site.dashboardUri(trackingOn = true)) { requestBatteryExemption() }
     }
 
