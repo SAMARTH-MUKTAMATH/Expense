@@ -165,7 +165,7 @@ export function DashboardOverview({ accounts, transactions }) {
   const totalExpenses = pieChartData.reduce((s, d) => s + d.value, 0);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {/* Recent Transactions */}
       <Card className="bg-[#161616] border-white/10">
         <CardHeader className="space-y-0 pb-4">

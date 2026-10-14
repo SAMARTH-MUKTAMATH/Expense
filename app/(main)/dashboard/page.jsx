@@ -42,7 +42,7 @@ export default async function DashboardPage() {
             {accounts?.length || 0} total
           </span>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <CreateAccountDrawer>
             <Card className="group cursor-pointer border-dashed border-2 border-white/15 bg-[#161616] hover:border-[#89E900] hover:bg-[#89E900]/5 transition-all">
               <CardContent className="flex flex-col items-center justify-center h-full min-h-[160px] pt-5">

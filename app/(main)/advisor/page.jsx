@@ -57,7 +57,7 @@ export default async function AdvisorListPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {reports.map((r) => (
             <Link key={r.id} href={`/advisor/${r.id}`}>
               <Card className="bg-[#161616] border-white/10 hover:border-[#89E900]/50 transition-colors h-full">

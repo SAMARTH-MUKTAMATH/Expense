@@ -32,7 +32,7 @@ export default async function GroupsPage() {
       {groups.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {groups.map((g) => (
             <GroupCard key={g.id} group={g} />
           ))}
