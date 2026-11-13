@@ -6,6 +6,7 @@ import { Download, Smartphone, Trash2, TriangleAlert, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { revokeIngestToken } from "@/actions/ingest-token";
 import { useAppShell } from "@/hooks/use-app-shell";
+import { IphoneSetup } from "./iphone-setup";
 
 const STALE_AFTER_DAYS = 3;
 const APK_PATH = "/budgetflow.apk";
@@ -29,7 +30,7 @@ function isStale(iso) {
 }
 
 export function PhoneBridgeCard({ status }) {
-  const { ready, inApp, trackingOn, isAndroid } = useAppShell();
+  const { ready, inApp, trackingOn, isAndroid, isIOS } = useAppShell();
   const [pending, startTransition] = useTransition();
 
   const onDisconnect = () => {
@@ -87,8 +88,8 @@ export function PhoneBridgeCard({ status }) {
       {status.hasToken && stale && (
         <p className="flex items-start gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-200">
           <TriangleAlert size={16} className="mt-0.5 shrink-0" />
-          No messages for over {STALE_AFTER_DAYS} days. Open the BudgetFLOW app
-          and check auto tracking is still on.
+          No messages for over {STALE_AFTER_DAYS} days. Check auto tracking is
+          still on in the BudgetFLOW app or your iPhone automation.
         </p>
       )}
 
@@ -130,9 +131,11 @@ export function PhoneBridgeCard({ status }) {
         </ol>
       )}
 
-      {ready && !inApp && !isAndroid && (
+      {ready && isIOS && <IphoneSetup hasToken={status.hasToken} />}
+
+      {ready && !inApp && !isAndroid && !isIOS && (
         <p className="text-sm text-white/60">
-          Open this page on your Android phone to get the app.
+          Open this page on your Android phone or iPhone to set it up.
         </p>
       )}
 

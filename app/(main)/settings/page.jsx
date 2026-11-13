@@ -79,7 +79,7 @@ export default async function SettingsPage() {
           <SettingsSection
             id="tracking"
             title="Automatic tracking"
-            description="Payments from your bank SMS are added the moment they arrive, even when the app is closed. Needs the BudgetFLOW Android app."
+            description="Payments from your bank SMS are added the moment they arrive, even when the app is closed. Uses the BudgetFLOW app on Android, or the Shortcuts app on iPhone."
           >
             <PhoneBridgeCard status={status} />
           </SettingsSection>
