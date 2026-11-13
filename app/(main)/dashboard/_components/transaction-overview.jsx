@@ -36,6 +36,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn, formatINR } from "@/lib/utils";
 import { toast } from "sonner";
+import { istMonthKey, istRangeBounds } from "@/lib/ist";
 
 const COLORS = [
   "#89E900",
@@ -56,45 +57,6 @@ const DATE_RANGES = [
   { value: "month", label: "This month" },
 ];
 
-function getRangeBounds(range) {
-  const now = new Date();
-  const endOfToday = new Date(now);
-  endOfToday.setHours(23, 59, 59, 999);
-
-  if (range === "all") return { start: null, end: endOfToday };
-
-  if (range === "today") {
-    const s = new Date(now);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "yesterday") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 1);
-    s.setHours(0, 0, 0, 0);
-    const e = new Date(s);
-    e.setHours(23, 59, 59, 999);
-    return { start: s, end: e };
-  }
-  if (range === "7d") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 6);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "30d") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 29);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "month") {
-    const s = new Date(now.getFullYear(), now.getMonth(), 1);
-    return { start: s, end: endOfToday };
-  }
-  return { start: null, end: endOfToday };
-}
-
 export function DashboardOverview({ accounts, transactions }) {
   const [selectedAccountId, setSelectedAccountId] = useState(
     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
@@ -105,11 +67,11 @@ export function DashboardOverview({ accounts, transactions }) {
     (t) => t.accountId === selectedAccountId
   );
 
-  const { start, end } = getRangeBounds(dateRange);
+  const { start, end } = istRangeBounds(dateRange);
   const filteredByDate = accountTransactions.filter((t) => {
     const d = new Date(t.date);
     if (start && d < start) return false;
-    if (d > end) return false;
+    if (d >= end) return false;
     return true;
   });
 
@@ -141,15 +103,10 @@ export function DashboardOverview({ accounts, transactions }) {
     toast.success(`Preparing ${range?.label || rangeValue} PDF…`);
   };
 
-  const currentDate = new Date();
-  const currentMonthExpenses = accountTransactions.filter((t) => {
-    const transactionDate = new Date(t.date);
-    return (
-      t.type === "EXPENSE" &&
-      transactionDate.getMonth() === currentDate.getMonth() &&
-      transactionDate.getFullYear() === currentDate.getFullYear()
-    );
-  });
+  const currentMonthKey = istMonthKey(new Date());
+  const currentMonthExpenses = accountTransactions.filter(
+    (t) => t.type === "EXPENSE" && istMonthKey(t.date) === currentMonthKey
+  );
 
   const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
     const category = transaction.category;

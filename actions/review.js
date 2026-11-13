@@ -20,7 +20,7 @@ export async function getReviewQueue() {
 
   const transactions = await db.transaction.findMany({
     where: { userId: user.id, needsReview: true },
-    orderBy: { date: "desc" },
+    orderBy: [{ date: "desc" }, { createdAt: "desc" }],
     include: { account: { select: { id: true, name: true } } },
   });
 

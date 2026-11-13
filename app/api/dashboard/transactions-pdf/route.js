@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
 import { checkUser } from "@/lib/checkUser";
 import { renderTransactionsPdf } from "@/lib/dashboard/renderTransactionsPdf";
+import { istRangeBounds } from "@/lib/ist";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,42 +14,6 @@ const RANGE_LABELS = {
   "30d": "Last 30 days",
   month: "This month",
 };
-
-function getRangeBounds(range) {
-  const now = new Date();
-  const endOfToday = new Date(now);
-  endOfToday.setHours(23, 59, 59, 999);
-  if (range === "today") {
-    const s = new Date(now);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "yesterday") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 1);
-    s.setHours(0, 0, 0, 0);
-    const e = new Date(s);
-    e.setHours(23, 59, 59, 999);
-    return { start: s, end: e };
-  }
-  if (range === "7d") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 6);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "30d") {
-    const s = new Date(now);
-    s.setDate(s.getDate() - 29);
-    s.setHours(0, 0, 0, 0);
-    return { start: s, end: endOfToday };
-  }
-  if (range === "month") {
-    const s = new Date(now.getFullYear(), now.getMonth(), 1);
-    return { start: s, end: endOfToday };
-  }
-  return { start: null, end: endOfToday };
-}
 
 export async function GET(request) {
   const user = await checkUser();
@@ -69,11 +34,11 @@ export async function GET(request) {
     return new Response("Account not found", { status: 404 });
   }
 
-  const { start, end } = getRangeBounds(range);
+  const { start, end } = istRangeBounds(range);
   const where = {
     userId: user.id,
     accountId,
-    date: { lte: end },
+    date: { lt: end },
   };
   if (start) where.date.gte = start;
 

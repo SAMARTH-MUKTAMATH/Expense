@@ -7,6 +7,7 @@ import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 import { checkUser } from "@/lib/checkUser";
 import { inngest } from "@/lib/inngest/client";
+import { istMonthKey, istMonthRange } from "@/lib/ist";
 
 const BUDGET_THRESHOLD_PCT = 75;
 
@@ -15,16 +16,14 @@ async function checkBudgetCrossing({ userId, account, addedAmount }) {
     const budget = await db.budget.findUnique({ where: { userId } });
     if (!budget) return false;
 
-    const startDate = new Date();
-    startDate.setDate(1);
-    startDate.setHours(0, 0, 0, 0);
+    const { start, end } = istMonthRange();
 
     const sum = await db.transaction.aggregate({
         where: {
             userId,
             accountId: account.id,
             type: "EXPENSE",
-            date: { gte: startDate },
+            date: { gte: start, lt: end },
         },
         _sum: { amount: true },
     });
@@ -40,9 +39,7 @@ async function checkBudgetCrossing({ userId, account, addedAmount }) {
     if (!justCrossed) return false;
 
     const alreadyAlertedThisMonth =
-        budget.lastAlertSent &&
-        new Date(budget.lastAlertSent).getMonth() === new Date().getMonth() &&
-        new Date(budget.lastAlertSent).getFullYear() === new Date().getFullYear();
+        budget.lastAlertSent && istMonthKey(budget.lastAlertSent) === istMonthKey(new Date());
 
     if (!alreadyAlertedThisMonth) {
         try {
@@ -245,9 +242,7 @@ export async function getUserTransactions(query = {}) {
             include: {
                 account: true,
             },
-            orderBy: {
-                date: "desc",
-            },
+            orderBy: [{ date: "desc" }, { createdAt: "desc" }],
         });
 
         return { success: true, data: transactions };

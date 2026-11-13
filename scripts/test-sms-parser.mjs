@@ -283,6 +283,57 @@ if (bad.length) console.log("  invalid:", bad.map(([k, v]) => `${k}->${v}`).join
 check("fallback expense id is real", isValidCategory("other-expense"), true);
 check("fallback income id is real", isValidCategory("other-income"), true);
 
+console.log("\n--- dates are IST wall-clock whatever the server TZ ---");
+const istIso = (body, receivedAt) =>
+  parseSMSVerbose(body, "AD-HDFCBK", new Date(receivedAt)).parsed?.occurredAt.toISOString();
+const DEBIT = "Rs.500.00 debited from a/c **1234 on";
+const TAIL = "to VPA zomato@ybl. Ref No 123456789012";
+
+check(
+  "31 Oct 22:15 IST stays in October",
+  istIso(`${DEBIT} 31-10-26 22:15 ${TAIL}`, "2026-10-31T17:00:00Z"),
+  "2026-10-31T16:45:00.000Z"
+);
+check(
+  "1 Nov 00:30 IST is November, not October",
+  istIso(`${DEBIT} 01-11-26 00:30 ${TAIL}`, "2026-10-31T19:05:00Z"),
+  "2026-10-31T19:00:00.000Z"
+);
+check(
+  "date-only SMS from today keeps the receive instant",
+  istIso(`${DEBIT} 12-11-26 ${TAIL}`, "2026-11-12T09:41:00Z"),
+  "2026-11-12T09:41:00.000Z"
+);
+check(
+  "date-only SMS from an earlier day is IST midnight",
+  istIso(`${DEBIT} 10-11-26 ${TAIL}`, "2026-11-12T09:41:00Z"),
+  "2026-11-09T18:30:00.000Z"
+);
+check(
+  "29 Feb in a leap year is accepted",
+  istIso(`${DEBIT} 29-02-28 10:00 ${TAIL}`, "2028-02-29T06:00:00Z"),
+  "2028-02-29T04:30:00.000Z"
+);
+check(
+  "31 Apr falls back to receive time",
+  istIso(`${DEBIT} 31-04-26 10:00 ${TAIL}`, "2026-05-01T06:00:00Z"),
+  "2026-05-01T06:00:00.000Z"
+);
+
+const { istMonthRange, istMonthKey, istRangeBounds } = await import("../lib/ist.js");
+const earlyMorning = new Date("2026-11-12T20:00:00Z"); // 13 Nov 01:30 IST
+check("today starts at IST midnight", istRangeBounds("today", earlyMorning).start.toISOString(), "2026-11-12T18:30:00.000Z");
+check("yesterday ends where today starts", istRangeBounds("yesterday", earlyMorning).end.toISOString(), "2026-11-12T18:30:00.000Z");
+check("this month starts 1 Nov IST", istRangeBounds("month", earlyMorning).start.toISOString(), "2026-10-31T18:30:00.000Z");
+check("all time has no start", istRangeBounds("all", earlyMorning).start, null);
+const nov = istMonthRange(new Date("2026-11-13T10:00:00Z"));
+check("Nov starts 1 Nov 00:00 IST", nov.start.toISOString(), "2026-10-31T18:30:00.000Z");
+check("Nov ends 1 Dec 00:00 IST", nov.end.toISOString(), "2026-11-30T18:30:00.000Z");
+check("previous month of Mar is Feb", istMonthRange(new Date("2026-03-31T12:00:00Z"), -1).start.toISOString(), "2026-01-31T18:30:00.000Z");
+check("Dec rolls into next year", istMonthRange(new Date("2026-12-15T00:00:00Z")).end.toISOString(), "2026-12-31T18:30:00.000Z");
+check("23:59 IST on 31 Oct keys as Oct", istMonthKey("2026-10-31T18:29:59Z"), "2026-10");
+check("00:00 IST on 1 Nov keys as Nov", istMonthKey("2026-10-31T18:30:00Z"), "2026-11");
+
 // ---------------------------------------------------------------------------
 
 console.log("\n" + "=".repeat(60));

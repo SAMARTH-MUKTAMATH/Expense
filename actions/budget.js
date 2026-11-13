@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { checkUser } from "@/lib/checkUser";
+import { istMonthRange } from "@/lib/ist";
 
 export async function getCurrentBudget(accountId) {
     try {
@@ -15,26 +16,13 @@ export async function getCurrentBudget(accountId) {
             },
         });
 
-        const currentDate = new Date();
-        const startOfMonth = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            1
-        );
-        const endOfMonth = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth() + 1,
-            0
-        );
+        const { start, end } = istMonthRange();
 
         const expenses = await db.transaction.aggregate({
             where: {
                 userId: user.id,
                 type: "EXPENSE",
-                date: {
-                    gte: startOfMonth,
-                    lte: endOfMonth,
-                },
+                date: { gte: start, lt: end },
                 accountId,
             },
             _sum: {
