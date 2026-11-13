@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Brand mark from app/icon.js, kept inside the 66dp safe zone -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:fillColor="#89E900"
-        android:fillType="evenOdd"
-        android:pathData="M54,28 A26,26 0 1,1 53.99,28 Z M54,36 A18,18 0 1,0 54.01,36 Z" />
-    <path
-        android:fillColor="#89E900"
-        android:pathData="M44,50 H64 V58 H44 Z" />
+        android:strokeColor="#89E900"
+        android:strokeWidth="3.6"
+        android:pathData="M42,32.8 H66 A9.2,9.2 0 0,1 75.2,42 V66 A9.2,9.2 0 0,1 66,75.2 H42 A9.2,9.2 0 0,1 32.8,66 V42 A9.2,9.2 0 0,1 42,32.8 Z" />
+    <group
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:translateX="39.6"
+        android:translateY="39.6">
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M11,15 H13 A2,2 0 1,0 13,11 H10 C9.4,11 8.9,11.2 8.6,11.6 L3,17" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M7,21 L8.6,19.6 C8.9,19.2 9.4,19 10,19 H14 C15.1,19 16.1,18.6 16.8,17.8 L21.4,13.4 A2,2 0 0,0 18.65,10.49 L14.45,14.39" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M2,16 L8,22" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:pathData="M13.1,9 A2.9,2.9 0 1,0 18.9,9 A2.9,2.9 0 1,0 13.1,9 Z" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:pathData="M3,5 A3,3 0 1,0 9,5 A3,3 0 1,0 3,5 Z" />
+    </group>
 </vector>
