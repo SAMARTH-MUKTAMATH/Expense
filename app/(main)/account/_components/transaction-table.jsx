@@ -54,8 +54,18 @@ import { bulkDeleteTransactions } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
+import { istMonthKey } from "@/lib/ist";
 
 const ITEMS_PER_PAGE = 10;
+
+function monthLabel(key) {
+  const [year, month] = key.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, 15)).toLocaleString("en-IN", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
 
 const RECURRING_INTERVALS = {
   DAILY: "Daily",
@@ -73,11 +83,22 @@ export function TransactionTable({ transactions }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [recurringFilter, setRecurringFilter] = useState("");
+  const [monthFilter, setMonthFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
+  const monthOptions = useMemo(() => {
+    const keys = new Set(transactions.map((t) => istMonthKey(t.date)));
+    keys.add(istMonthKey(new Date()));
+    return [...keys].sort().reverse();
+  }, [transactions]);
+
   const filteredAndSortedTransactions = useMemo(() => {
     let result = [...transactions];
+
+    if (monthFilter) {
+      result = result.filter((t) => istMonthKey(t.date) === monthFilter);
+    }
 
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
@@ -118,7 +139,26 @@ export function TransactionTable({ transactions }) {
     });
 
     return result;
-  }, [transactions, searchTerm, typeFilter, recurringFilter, sortConfig]);
+  }, [transactions, searchTerm, typeFilter, recurringFilter, monthFilter, sortConfig]);
+
+  const monthSummary = useMemo(() => {
+    if (!monthFilter) return null;
+    return filteredAndSortedTransactions.reduce(
+      (sum, t) => {
+        if (t.type === "EXPENSE") sum.spent += t.amount;
+        else sum.income += t.amount;
+        return sum;
+      },
+      { spent: 0, income: 0, count: filteredAndSortedTransactions.length }
+    );
+  }, [monthFilter, filteredAndSortedTransactions]);
+
+  const monthIndex = monthOptions.indexOf(monthFilter);
+  const selectMonth = (key) => {
+    setMonthFilter(key);
+    setCurrentPage(1);
+    setSelectedIds([]);
+  };
 
   const totalPages = Math.ceil(
     filteredAndSortedTransactions.length / ITEMS_PER_PAGE
@@ -182,6 +222,7 @@ export function TransactionTable({ transactions }) {
     setSearchTerm("");
     setTypeFilter("");
     setRecurringFilter("");
+    setMonthFilter("");
     setCurrentPage(1);
   };
 
@@ -256,7 +297,7 @@ export function TransactionTable({ transactions }) {
             </div>
           )}
 
-          {(searchTerm || typeFilter || recurringFilter) && (
+          {(searchTerm || typeFilter || recurringFilter || monthFilter) && (
             <Button
               variant="outline"
               size="icon"
@@ -268,6 +309,63 @@ export function TransactionTable({ transactions }) {
           )}
         </div>
       </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label="Older month"
+          onClick={() => selectMonth(monthOptions[monthIndex + 1])}
+          disabled={!monthFilter || monthIndex === monthOptions.length - 1}
+        >
+          <ArrowLeftIcon size={16} />
+        </Button>
+        <Select
+          value={monthFilter || "all"}
+          onValueChange={(value) => selectMonth(value === "all" ? "" : value)}
+        >
+          <SelectTrigger className="w-[170px]" aria-label="Month">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All months</SelectItem>
+            {monthOptions.map((key) => (
+              <SelectItem key={key} value={key}>
+                {monthLabel(key)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label="Newer month"
+          onClick={() => selectMonth(monthOptions[monthIndex - 1])}
+          disabled={!monthFilter || monthIndex === 0}
+        >
+          <ArrowRightIcon size={16} />
+        </Button>
+      </div>
+
+      {monthSummary && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+          {[
+            { label: "Spent", value: formatINR(monthSummary.spent), tone: "text-red-400" },
+            { label: "Income", value: formatINR(monthSummary.income), tone: "text-emerald-400" },
+            { label: "Transactions", value: monthSummary.count, tone: "text-white" },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="min-w-0 rounded-xl border border-white/10 bg-[#161616] p-3 sm:p-4"
+            >
+              <p className="text-xs text-gray-400">{stat.label}</p>
+              <p className={cn("truncate text-base sm:text-xl font-bold tabular-nums", stat.tone)}>
+                {stat.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Transactions Table */}
       <div className="rounded-xl border border-white/10 bg-[#161616] overflow-x-auto">
