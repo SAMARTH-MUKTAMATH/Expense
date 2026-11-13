@@ -1,0 +1,48 @@
+PENDING / BLOCKED — needs the owner
+===================================
+
+1. [BUG-007, blocking all scheduled jobs] Inngest keys in Vercel
+   - CONFIRMED 2026-11-13 via the Vercel API: INNGEST_SIGNING_KEY and
+     INNGEST_EVENT_KEY are missing; INNGEST_DEV is set in production and
+     preview.
+   - Fix: install the Inngest integration on project budgetfloww (it adds both
+     keys), or copy them from app.inngest.com > Production > Manage. Delete
+     INNGEST_DEV from production and preview.
+   - Redeploy, then confirm GET https://budgetfloww.vercel.app/api/inngest
+     returns 200 with "has_signing_key": true.
+   - In the Inngest dashboard: resync the app and check that 6 functions are
+     listed and that trigger-recurring-transactions shows its cron.
+   - Vercel function logs print "[inngest] runtime check ... MISSING/set" at
+     cold start, which confirms the key status without exposing it.
+
+2. [BUG-002 data] Correct the 50 SMS rows stored 5h30m ahead
+   - Dry run:  node --env-file=.env scripts/fix-sms-shifted-dates.mjs
+   - Apply:    node --env-file=.env scripts/fix-sms-shifted-dates.mjs --apply
+   - Undo:     add 5h30m back to the same ids.
+   - Deploy the code fix FIRST, otherwise new rows keep arriving shifted.
+
+3. [BUG-006] Ship the new launcher icon
+   - Bump versionCode/versionName in android/app/build.gradle.kts, build the
+     release APK, replace public/budgetflow.apk, reinstall on the phone
+     (launchers cache icons; uninstalling first is the reliable way).
+
+4. [BUG-005] Startup trace (the server is not the bottleneck)
+   - Phone over USB > chrome://inspect > inspect the TWA > Performance and
+     Network panels from a cold launch. Capture: time to first byte of
+     /dashboard, any Clerk redirects (*.clerk.accounts.dev = dev instance),
+     and long gaps before the first request.
+   - Also check whether production uses a Clerk pk_live key. Dev instances add
+     handshake redirects and are rate-limited.
+
+5. [BUG-004] Mobile: send screenshots of the specific broken screens. The
+   static scan found no page-level overflow.
+
+6. Local build environment: node_modules mixes npm and pnpm (two Next.js
+   copies), so `npm run build` fails locally on /groups/new. Fix: delete
+   node_modules and pnpm-lock.yaml (or package-lock.json) and reinstall with ONE
+   package manager. Check which lockfile Vercel uses first.
+
+7. Decisions (not changed):
+   - generate-monthly-reports runs on the 28th but reports the PREVIOUS month.
+     Should it run on the 1st?
+   - Budget sums include PENDING/FAILED transactions. Is that intended?

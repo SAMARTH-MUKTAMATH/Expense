@@ -1,0 +1,23 @@
+Last updated: 2026-11-13
+
+COMPLETED
+- Audit of all 7 issues, with root causes confirmed from code, local repros and
+  read-only production data
+- BUG-001 budget month boundaries (IST)
+- BUG-002 SMS IST timestamps, receive-time ordering, createdAt tie-break
+- BUG-003 month view with totals on the account transaction table
+- BUG-006 Android launcher icon replaced (debug build OK)
+- BUG-007 (A) Inngest v4 trigger syntax for the recurring jobs
+- Tests 151/151; clean-worktree build passes; docs written
+
+IN PROGRESS
+- none
+
+NEXT
+- Owner review, then commit and deploy
+- Run the data fix for the 50 shifted rows after deploying
+
+BLOCKED (see TODO_PENDING.txt)
+- BUG-007 (B) Inngest keys in Vercel
+- BUG-005 needs a trace from the phone
+- BUG-004 needs screenshots
