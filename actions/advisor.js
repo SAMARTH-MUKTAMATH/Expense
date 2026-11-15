@@ -2,8 +2,9 @@
 
 import { db } from "@/lib/prisma";
 import { checkUser } from "@/lib/checkUser";
-import { inngest } from "@/lib/inngest/client";
+import { runAdvisorReport } from "@/lib/jobs";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 const RATE_LIMIT_HOURS = resolveRateLimitHours();
 
@@ -39,10 +40,12 @@ export async function requestAdvisorReport(deliveryMode = "web") {
     };
   }
 
-  await inngest.send({
-    name: "advisor.generate.request",
-    data: { userId: user.id, source: "on-demand", deliveryMode },
-  });
+  // the advisor page polls getReportNewerThan for the result
+  after(() =>
+    runAdvisorReport(user.id, { source: "on-demand", deliveryMode }).catch((error) =>
+      console.error("[advisor] on-demand report failed:", error)
+    )
+  );
 
   revalidatePath("/advisor");
   return { success: true, deliveryMode };

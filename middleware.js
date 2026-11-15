@@ -43,9 +43,13 @@ const clerk = clerkMiddleware(async (auth, req) => {
 const protectedMiddleware = createMiddleware(aj, clerk);
 
 export default function middleware(req, event) {
-  // phone bridge and asset-link verifier are not browsers
+  // phone bridge, Vercel Cron and asset-link verifier aren't browsers
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/api/ingest") || pathname.startsWith("/.well-known/")) {
+  if (
+    pathname.startsWith("/api/ingest") ||
+    pathname.startsWith("/api/cron") ||
+    pathname.startsWith("/.well-known/")
+  ) {
     return NextResponse.next();
   }
   return protectedMiddleware(req, event);

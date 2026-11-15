@@ -1,47 +1,67 @@
 # Cron audit report
 
-Nobody had access to Vercel or Inngest. Nothing below comes from execution
-history or logs. The evidence is the code, a local reproduction, and one
-anonymous `GET /api/inngest` against production. That request is the SDK's
-introspection endpoint and does not trigger anything.
+## Outcome (2026-11-14)
 
-## Where schedules live
+**Inngest was removed and replaced with Vercel Cron.** Inngest had never
+worked in production: the project never had `INNGEST_SIGNING_KEY` or
+`INNGEST_EVENT_KEY`, as confirmed via the Vercel API on 2026-11-13. On top of
+that, two of its functions used trigger syntax that Inngest v4 ignores.
 
-`vercel.json` has **no `crons`**. Every schedule is an Inngest function, served by
-`app/api/inngest/route.js` and defined in `lib/inngest/function.js`. The schedules
-only fire if Inngest Cloud has synced the app.
+## Jobs now
 
-| Function id | Purpose | Trigger | Before | After |
+| Job | Schedule (`vercel.json`, UTC) | IST | Endpoint | Was |
 |---|---|---|---|---|
-| `trigger-recurring-transactions` | Fan out due recurring transactions | cron `0 0 * * *` (UTC, so 05:30 IST) | **Never registered** (top-level `cron:` ignored by v4) | `triggers: [{ cron }]` |
-| `process-recurring-transaction` | Create one recurring copy, move the balance | event `transaction.recurring.process` | **Never registered** (top-level `event:`) | `triggers: [{ event }]` |
-| `generate-monthly-reports` | Monthly e-mail report | cron `TZ=Asia/Kolkata 0 0 28 * *` | Correct syntax | Month bounds now IST |
-| `trigger-financial-advisor` | Fan out advisor runs | cron `TZ=Asia/Kolkata 0 1 1 * *` | Correct syntax | unchanged |
-| `run-financial-advisor` | Generate an advisor report | event `advisor.generate.request` | Correct syntax | Month key now IST |
-| `notify-budget-threshold` | Budget e-mail at ≥75% | event `budget.threshold.crossed` | Correct syntax | Month bounds now IST |
+| Recurring transactions | `0 0 * * *` | daily 05:30 | `/api/cron/recurring` | Inngest cron + fan-out event, never registered |
+| Monthly e-mail report | `0 0 28 * *` | 28th 05:30 | `/api/cron/monthly-report` | Inngest, 28th 00:00 IST |
+| Monthly advisor (e-mail + PDF) | `0 0 1 * *` | 1st 05:30 | `/api/cron/advisor` | Inngest, 1st 01:00 IST |
+| On-demand advisor report | — | — | `after()` in `requestAdvisorReport` | Inngest event |
+| Budget alert e-mail | — | — | `after()` when spending crosses 75% | Inngest event with a 1-minute delay |
 
-## Stage-by-stage
+The job code is in `lib/jobs.js`; the endpoint is `app/api/cron/[job]/route.js`.
 
-| Stage | Finding |
+## Safety
+
+- **Auth:** a request is accepted only when it carries
+  `Authorization: Bearer $CRON_SECRET`, compared in constant time. If
+  `CRON_SECRET` is unset, every call is refused. Refusals are logged as
+  `[cron] rejected ...`.
+- **Middleware:** `/api/cron` bypasses Clerk and Arcjet, as `/api/ingest`
+  already does, so the bot filter can't block Vercel's requests.
+- **Idempotency:**
+  - Recurring: each row is claimed with a conditional update before the copy
+    is inserted, in one DB transaction, so an overlapping run posts nothing.
+  - Advisor: a user who already has a `cron` report for the month is skipped.
+  - Budget alert: de-duplicated by `lastAlertSent`, and it re-checks the
+    total before sending.
+  - Monthly report: **no guard.** A duplicate run would send a second e-mail.
+- **Failures:** one user's failure doesn't stop the others. It's logged with
+  the user id, and the endpoint returns 500, which shows as failed in Vercel →
+  Cron Jobs.
+- **Timeout:** `maxDuration = 300`. Advisor reports run 3 at a time.
+
+## Verified locally (2026-11-14, `next dev`)
+
+| Request | Result |
 |---|---|
-| 1. Schedule registration | Two functions had empty triggers (fixed). The whole app likely **cannot sync**; see stage 4. |
-| 2. Scheduled trigger | Unknown. This needs the Inngest dashboard. |
-| 3. Endpoint invocation | `/api/inngest` responds, with **HTTP 500** to GET. |
-| 4. Authentication | **Confirmed via the Vercel API (2026-11-13).** Project `budgetfloww` (`prj_Bv47n9U3zhnCf3v8ZPJigjeFzINH`) has **no `INNGEST_SIGNING_KEY` and no `INNGEST_EVENT_KEY`** in any environment. It has no Inngest integration installed, and it does have a leftover `INNGEST_DEV` set in production and preview. The production 500 is the SDK's "no signing key" response. |
-| 5–7. Execution / DB / persistence | Not observable without logs. The code is idempotent where it matters: the recurring job advances `nextRecurringDate` in the same DB transaction as the insert, and budget e-mails are de-duplicated by `lastAlertSent`. |
-| 8. Frontend | Monthly reports appear in Advisor history (`financial_reports`). |
+| No header | 401, refusal logged |
+| Wrong secret | 401 |
+| Unknown job | 404 |
+| Valid secret, `recurring` | 200 `{ processed: 0, failed: [] }`; the database has 0 recurring transactions |
 
-## Other observations (not changed)
+`monthly-report` and `advisor` were **not** run: they send real e-mails.
 
-- `generate-monthly-reports` runs on the **28th** but reports the **previous**
-  month, so the e-mail arrives about four weeks late. Decide whether it should
-  run on the 1st.
-- `/api/inngest` is covered by Arcjet `detectBot` (LIVE) in `middleware.js`,
-  which allows `GO_HTTP` for Inngest. If syncing still fails after the keys are
-  set, check the Arcjet dashboard for blocked `/api/inngest` requests.
+## Not yet verified
 
-## Final status
+- Registration in Vercel, which appears after deploy under Settings → Cron
+  Jobs.
+- The first real scheduled run.
+- Hobby plan: crons fire once a day at most, and only within the scheduled
+  hour, not at the exact minute.
 
-Code fix done. **Execution is not verified**: it is blocked on the Vercel
-environment variables. Do not trigger jobs manually until the keys are set:
-`generate-monthly-reports` and the advisor send real e-mails.
+## Trade-offs versus Inngest
+
+- No automatic retries. A failed run waits for the next schedule.
+- The budget alert no longer waits a minute and re-checks; it sends right
+  after the crossing transaction is saved.
+- The `inngest` package is still in `package.json`. Removing it means
+  regenerating both lockfiles, so do it together with the npm/pnpm clean-up.

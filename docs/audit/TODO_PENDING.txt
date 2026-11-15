@@ -1,7 +1,16 @@
 PENDING / BLOCKED — needs the owner
 ===================================
 
-1. [BUG-007, blocking all scheduled jobs] Inngest keys in Vercel
+0. [BUG-007, replaces item 1] Vercel Cron, done in code on 2026-11-14
+   - Vercel > budgetfloww > Settings > Environment Variables > add CRON_SECRET
+     (Sensitive, Production): any random string of 32+ characters, e.g. from
+       node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   - Delete INNGEST_DEV. Push to deploy.
+   - Check Settings > Cron Jobs lists 3 jobs. "Run" on "recurring" is safe
+     (0 recurring transactions). The other two send real e-mails.
+   - Data fix done 2026-11-14: 50 rows corrected, 0 remaining.
+
+1. [SUPERSEDED by 0] Inngest keys in Vercel
    - CONFIRMED 2026-11-13 via the Vercel API: INNGEST_SIGNING_KEY and
      INNGEST_EVENT_KEY are missing; INNGEST_DEV is set in production and
      preview.

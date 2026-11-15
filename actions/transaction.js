@@ -6,7 +6,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 import { checkUser } from "@/lib/checkUser";
-import { inngest } from "@/lib/inngest/client";
+import { after } from "next/server";
+import { sendBudgetAlertIfOver } from "@/lib/jobs";
 import { istMonthKey, istMonthRange } from "@/lib/ist";
 
 const BUDGET_THRESHOLD_PCT = 75;
@@ -42,14 +43,11 @@ async function checkBudgetCrossing({ userId, account, addedAmount }) {
         budget.lastAlertSent && istMonthKey(budget.lastAlertSent) === istMonthKey(new Date());
 
     if (!alreadyAlertedThisMonth) {
-        try {
-            await inngest.send({
-                name: "budget.threshold.crossed",
-                data: { budgetId: budget.id, userId, accountId: account.id },
-            });
-        } catch (err) {
-            console.error("Failed to fire budget.threshold.crossed:", err);
-        }
+        after(() =>
+            sendBudgetAlertIfOver({ budgetId: budget.id, accountId: account.id }).catch((err) =>
+                console.error("Budget alert failed:", err)
+            )
+        );
     }
     return true;
 }
